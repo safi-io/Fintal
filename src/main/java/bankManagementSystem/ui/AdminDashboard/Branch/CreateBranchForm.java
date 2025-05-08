@@ -1,6 +1,6 @@
-package main.java.bankManagementSystem.ui.Admin.Branch;
+package main.java.bankManagementSystem.ui.AdminDashboard.Branch;
 
-import main.java.bankManagementSystem.controller.BranchController;
+import main.java.bankManagementSystem.controller.AdminDashboard.BranchController;
 
 import javax.swing.*;
 import java.awt.*;

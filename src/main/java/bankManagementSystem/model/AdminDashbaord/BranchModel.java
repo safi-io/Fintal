@@ -1,4 +1,4 @@
-package main.java.bankManagementSystem.model;
+package main.java.bankManagementSystem.model.AdminDashbaord;
 
 public class BranchModel {
 

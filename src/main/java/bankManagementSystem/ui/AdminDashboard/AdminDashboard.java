@@ -1,11 +1,11 @@
-package main.java.bankManagementSystem.ui.Admin;
+package main.java.bankManagementSystem.ui.AdminDashboard;
 
-import main.java.bankManagementSystem.ui.Admin.Branch.CreateBranchForm;
-import main.java.bankManagementSystem.ui.Admin.Branch.DeleteBranchForm;
-import main.java.bankManagementSystem.ui.Admin.Branch.UpdateBranchForm;
-import main.java.bankManagementSystem.ui.Admin.Staff.CreateStaffForm;
-import main.java.bankManagementSystem.ui.Admin.Staff.DeleteStaffForm;
-import main.java.bankManagementSystem.ui.Admin.Staff.UpdateStaffForm;
+import main.java.bankManagementSystem.ui.AdminDashboard.Branch.CreateBranchForm;
+import main.java.bankManagementSystem.ui.AdminDashboard.Branch.DeleteBranchForm;
+import main.java.bankManagementSystem.ui.AdminDashboard.Branch.UpdateBranchForm;
+import main.java.bankManagementSystem.ui.AdminDashboard.Staff.CreateStaffForm;
+import main.java.bankManagementSystem.ui.AdminDashboard.Staff.DeleteStaffForm;
+import main.java.bankManagementSystem.ui.AdminDashboard.Staff.UpdateStaffForm;
 
 import javax.swing.*;
 import java.awt.*;

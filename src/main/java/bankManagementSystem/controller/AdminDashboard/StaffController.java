@@ -1,7 +1,7 @@
-package main.java.bankManagementSystem.controller;
+package main.java.bankManagementSystem.controller.AdminDashboard;
 
-import main.java.bankManagementSystem.dao.StaffDAO;
-import main.java.bankManagementSystem.model.StaffModel;
+import main.java.bankManagementSystem.dao.AdminDashboard.StaffDAO;
+import main.java.bankManagementSystem.model.AdminDashbaord.StaffModel;
 
 import org.mindrot.jbcrypt.BCrypt;
 

@@ -1,4 +1,4 @@
-package main.java.bankManagementSystem.model;
+package main.java.bankManagementSystem.model.AdminDashbaord;
 
 import java.time.LocalDate;
 

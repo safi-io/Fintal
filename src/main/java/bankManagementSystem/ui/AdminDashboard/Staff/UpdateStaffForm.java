@@ -1,8 +1,8 @@
-package main.java.bankManagementSystem.ui.Admin.Staff;
+package main.java.bankManagementSystem.ui.AdminDashboard.Staff;
 
-import main.java.bankManagementSystem.controller.BranchController;
-import main.java.bankManagementSystem.controller.StaffController;
-import main.java.bankManagementSystem.model.StaffModel;
+import main.java.bankManagementSystem.controller.AdminDashboard.BranchController;
+import main.java.bankManagementSystem.controller.AdminDashboard.StaffController;
+import main.java.bankManagementSystem.model.AdminDashbaord.StaffModel;
 
 import javax.swing.*;
 import java.awt.*;

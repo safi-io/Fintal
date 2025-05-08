@@ -1,21 +1,19 @@
-package main.java.bankManagementSystem.ui.Admin.Staff;
+package main.java.bankManagementSystem.ui.AdminDashboard.Branch;
 
-import main.java.bankManagementSystem.controller.StaffController;
+import main.java.bankManagementSystem.controller.AdminDashboard.BranchController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
-import java.util.*;
 import java.util.List;
 
-public class DeleteStaffForm extends JPanel {
+public class DeleteBranchForm extends JPanel {
 
-    private JComboBox<String> staffComboBox;
-    private final StaffController staffController;
+    private JComboBox<String> branchComboBox;
+    private final BranchController branchController;
 
-    public DeleteStaffForm() {
-        staffController = new StaffController();
+    public DeleteBranchForm() {
+        branchController = new BranchController();
         updateComboBox();
         setLayout(new GridBagLayout());
         setBackground(Color.WHITE);
@@ -27,7 +25,7 @@ public class DeleteStaffForm extends JPanel {
         Font fieldFont = new Font("SansSerif", Font.PLAIN, 16);
 
         // Heading Label
-        JLabel heading = new JLabel("Delete Staff");
+        JLabel heading = new JLabel("Delete Branch");
         heading.setFont(new Font("SansSerif", Font.BOLD, 26));
         heading.setHorizontalAlignment(SwingConstants.CENTER);
         gbc.gridwidth = 2;
@@ -39,20 +37,23 @@ public class DeleteStaffForm extends JPanel {
         gbc.gridwidth = 1;
         gbc.gridy++;
 
-        JLabel selectStaffLabel = new JLabel("Select Staff ID:");
-        selectStaffLabel.setFont(labelFont);
+        JLabel selectBranchLabel = new JLabel("Select Branch ID:");
+        selectBranchLabel.setFont(labelFont);
         gbc.gridx = 0;
-        add(selectStaffLabel, gbc);
+        add(selectBranchLabel, gbc);
 
-        staffComboBox.setFont(fieldFont);
+        // ComboBox for Branch IDs
+
+        // DB OPERATION NEEDED HERE TODO
+        branchComboBox.setFont(fieldFont);
         gbc.gridx = 1;
-        add(staffComboBox, gbc);
+        add(branchComboBox, gbc);
 
         // Delete Button
         gbc.gridy++;
         gbc.gridwidth = 2;
         gbc.gridx = 0;
-        JButton deleteButton = new JButton("Delete Staff");
+        JButton deleteButton = new JButton("Delete Branch");
         deleteButton.setFont(new Font("SansSerif", Font.BOLD, 18));
         deleteButton.setBackground(new Color(255, 69, 0)); // Red color for delete
         deleteButton.setForeground(Color.WHITE);
@@ -61,21 +62,21 @@ public class DeleteStaffForm extends JPanel {
         deleteButton.setPreferredSize(new Dimension(200, 40));
 
         deleteButton.addActionListener((ActionEvent e) -> {
-            String selectedStaffIdFull = (String) staffComboBox.getSelectedItem();
-            String selectedStaffId = selectedStaffIdFull.split(" - ")[0];
+            String selectedBranchIdFull = (String) branchComboBox.getSelectedItem();
+            String selectedBranchId = selectedBranchIdFull.split(" - ")[0];
 
             try {
-                if (selectedStaffId != null) {
+                if (selectedBranchId != null) {
 
                     // Need Validation here
-                    int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this staff?", "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this branch?", "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
                     if (result == JOptionPane.YES_OPTION) {
-                        boolean isDeleted = staffController.handleDeleteStaff(selectedStaffId);
+                        boolean isDeleted = branchController.handleDeleteBranch(selectedBranchId);
                         if (isDeleted) {
-                            JOptionPane.showMessageDialog(this, "Staff deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(this, "Branch deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                         } else {
-                            JOptionPane.showMessageDialog(this, "Failed to delete staff.", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(this, "Failed to delete branch.", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                         updateComboBox();
                     }
@@ -89,17 +90,17 @@ public class DeleteStaffForm extends JPanel {
     }
 
     private void updateComboBox() {
-        List<String> idNameList = staffController.handleGetStaffIdNameList();
+        List<String> idNameList = branchController.handleGetBranchIdNameList();
         if(idNameList.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No Staff Currently in the System", "Error", JOptionPane.ERROR_MESSAGE);
-            staffComboBox.removeAllItems();
+            JOptionPane.showMessageDialog(this, "No Branches Currently in the System", "Error", JOptionPane.ERROR_MESSAGE);
+            branchComboBox.removeAllItems();
             return;
         }
-        if (staffComboBox == null) {
-            staffComboBox = new JComboBox<>(idNameList.toArray(new String[0]));
+        if (branchComboBox == null) {
+            branchComboBox = new JComboBox<>(idNameList.toArray(new String[0]));
         } else {
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(idNameList.toArray(new String[0]));
-            staffComboBox.setModel(model);
+            branchComboBox.setModel(model);
         }
     }
 
