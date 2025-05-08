@@ -10,7 +10,7 @@ import java.util.List;
 
 public class UpdateBranchForm extends JPanel {
 
-    private final JComboBox<Integer> branchIdDropdown;
+    private final JComboBox<String> branchIdDropdown;
     private final JTextField branchNameField;
     private final JTextField branchAddressField;
     private final JTextField branchPhoneField;
@@ -99,26 +99,30 @@ public class UpdateBranchForm extends JPanel {
 
         // On selection change
         branchIdDropdown.addActionListener((ActionEvent e) -> {
-            Integer selectedId = (Integer) branchIdDropdown.getSelectedItem();
-            if (selectedId != null) {
-                BranchModel branch = branchController.handleGetBranchById(selectedId);
-                if (branch != null) {
-                    branchNameField.setText(branch.getBranchName());
-                    branchAddressField.setText(branch.getBranchAddress());
-                    branchPhoneField.setText(branch.getBranchPhone());
-                }
+            String selectedBranchIdFull = (String) branchIdDropdown.getSelectedItem();
+            int selectedId = Integer.parseInt(selectedBranchIdFull.split(" - ")[0]);
+
+            BranchModel branch = branchController.handleGetBranchById(selectedId);
+            if (branch != null) {
+                branchNameField.setText(branch.getBranchName());
+                branchAddressField.setText(branch.getBranchAddress());
+                branchPhoneField.setText(branch.getBranchPhone());
             }
         });
 
         // On update click
         updateButton.addActionListener((ActionEvent e) -> {
-            Integer selectedId = (Integer) branchIdDropdown.getSelectedItem();
+
+            String selectedBranchIdFull = (String) branchIdDropdown.getSelectedItem();
+
+            int selectedId = Integer.parseInt(selectedBranchIdFull.split(" - ")[0]);
             String name = branchNameField.getText();
             String address = branchAddressField.getText();
             String phone = branchPhoneField.getText();
 
+
             try {
-                boolean success = true;
+                boolean success = branchController.handleUpdateBranch(selectedId, name, address, phone);
                 if (success) {
                     JOptionPane.showMessageDialog(this, "Branch updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 } else {
@@ -132,11 +136,12 @@ public class UpdateBranchForm extends JPanel {
 
     private void loadBranchIds() {
         try {
-            List<Integer> ids = branchController.handleGetAllBranchIds(); // You should implement this
-            for (Integer id : ids) {
+            List<String> ids = branchController.handleGetBranchIdNameList(); // You should implement this
+            for (String id : ids) {
                 branchIdDropdown.addItem(id);
             }
         } catch (RuntimeException ex) {
+            System.out.println(ex.getMessage());
             JOptionPane.showMessageDialog(this, "Failed to load branch IDs.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

@@ -40,6 +40,22 @@ public class BranchController {
 
     }
 
+    public boolean handleUpdateBranch(int branchId, String branchName, String branchAddress, String branchPhone) {
+        // Create a Branch model object from the input
+        BranchModel branch = new BranchModel(branchId, branchName, branchAddress, branchPhone);
+
+        if (branch.getBranchName().isEmpty() || branch.getBranchAddress().isEmpty() || branch.getBranchPhone().isEmpty()) {
+            return false;
+        }
+
+        // Delegate the database operation to DAO
+        try {
+            return branchDAO.updateBranch(branch);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<Integer> handleGetAllBranchIds() {
         try {
             return branchDAO.getAllBranchIds();

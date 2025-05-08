@@ -27,32 +27,16 @@ public class BranchModel {
         return branchId;
     }
 
-    public void setBranchId(int branchId) {
-        this.branchId = branchId;
-    }
-
     public String getBranchName() {
         return branchName;
-    }
-
-    public void setBranchName(String branchName) {
-        this.branchName = branchName;
     }
 
     public String getBranchAddress() {
         return branchAddress;
     }
 
-    public void setBranchAddress(String branchAddress) {
-        this.branchAddress = branchAddress;
-    }
-
     public String getBranchPhone() {
         return branchPhone;
-    }
-
-    public void setBranchPhone(String branchPhone) {
-        this.branchPhone = branchPhone;
     }
 
     // Optionally override toString method to display branch data nicely

@@ -64,6 +64,25 @@ public class BranchDAO {
         }
     }
 
+    public boolean updateBranch(BranchModel updateBranch) {
+        String query = "UPDATE BRANCH SET BRANCH_NAME = ?, BRANCH_ADDRESS = ?, BRANCH_PHONE = ? WHERE BRANCH_ID = ?";
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setString(1, updateBranch.getBranchName());
+            stmt.setString(2, updateBranch.getBranchAddress());
+            stmt.setString(3, updateBranch.getBranchPhone());
+            stmt.setInt(4, updateBranch.getBranchId());
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
     public List<String> getBranchIdNameList() {
         List<String> branchList = new ArrayList<>();
         String query = "SELECT CONCAT(BRANCH_ID, ' - ', BRANCH_NAME) AS RESULT FROM BRANCH";
@@ -100,18 +119,13 @@ public class BranchDAO {
         BranchModel branch = null;
         String query = "SELECT * FROM BRANCH WHERE BRANCH_ID = ?";
 
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, branchId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    branch = new BranchModel(
-                            rs.getInt("BRANCH_ID"),   // Corrected: now String
-                            rs.getString("BRANCH_NAME"),
-                            rs.getString("BRANCH_ADDRESS"),
-                            rs.getString("BRANCH_PHONE")
-                    );
+                    branch = new BranchModel(rs.getInt("BRANCH_ID"),   // Corrected: now String
+                            rs.getString("BRANCH_NAME"), rs.getString("BRANCH_ADDRESS"), rs.getString("BRANCH_PHONE"));
                 }
             }
 
@@ -121,6 +135,5 @@ public class BranchDAO {
 
         return branch;
     }
-
 
 }

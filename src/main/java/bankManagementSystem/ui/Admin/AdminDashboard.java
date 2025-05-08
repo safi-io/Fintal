@@ -4,6 +4,8 @@ import main.java.bankManagementSystem.ui.Admin.Branch.CreateBranchForm;
 import main.java.bankManagementSystem.ui.Admin.Branch.DeleteBranchForm;
 import main.java.bankManagementSystem.ui.Admin.Branch.UpdateBranchForm;
 import main.java.bankManagementSystem.ui.Admin.Staff.CreateStaffForm;
+import main.java.bankManagementSystem.ui.Admin.Staff.DeleteStaffForm;
+import main.java.bankManagementSystem.ui.Admin.Staff.UpdateStaffForm;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,6 +79,7 @@ public class AdminDashboard extends JFrame {
 
         // Main content panel
         mainContentPanel = new JPanel();
+
         mainContentPanel.setLayout(new BorderLayout());
         mainContentPanel.setBackground(Color.WHITE);
 
@@ -86,7 +89,7 @@ public class AdminDashboard extends JFrame {
 
         // Heading panel
         JPanel headingPanel = new JPanel(new BorderLayout());
-        headingPanel.setBackground(new Color(100, 149, 237)); // A nice blue
+        headingPanel.setBackground(new Color(100, 149, 237));
         headingPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
         JLabel heading = new JLabel("ADMIN DASHBOARD", SwingConstants.LEFT);
@@ -120,6 +123,12 @@ public class AdminDashboard extends JFrame {
         switch (title) {
             case "Create Staff":
                 mainContentPanel.add(new CreateStaffForm(), BorderLayout.CENTER);
+                break;
+            case "Update Staff":
+                mainContentPanel.add(new UpdateStaffForm(), BorderLayout.CENTER);
+                break;
+            case "Delete Staff":
+                mainContentPanel.add(new DeleteStaffForm(), BorderLayout.CENTER);
                 break;
             case "Create Branch":
                 mainContentPanel.add(new CreateBranchForm(), BorderLayout.CENTER);
