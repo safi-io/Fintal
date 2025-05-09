@@ -1,6 +1,6 @@
 package main.java.bankManagementSystem.dao.AdminDashboard;
 
-import main.java.bankManagementSystem.model.AdminDashbaord.BranchModel;
+import main.java.bankManagementSystem.model.BranchModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;

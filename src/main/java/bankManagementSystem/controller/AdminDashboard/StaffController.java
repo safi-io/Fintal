@@ -1,11 +1,15 @@
 package main.java.bankManagementSystem.controller.AdminDashboard;
 
 import main.java.bankManagementSystem.dao.AdminDashboard.StaffDAO;
-import main.java.bankManagementSystem.model.AdminDashbaord.StaffModel;
+import main.java.bankManagementSystem.model.StaffModel;
 
 import org.mindrot.jbcrypt.BCrypt;
 
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,7 +26,11 @@ public class StaffController {
 
         String password = java.util.UUID.randomUUID().toString().replace("-", "").substring(0, 10);
         // Send the upper password as mail, and then hash it and store inside database
-        System.out.println(password);
+
+        // Storing inside file
+        Path path = Paths.get("src/main/resources/samplepasswords.txt");
+        storeIntoFile(path.toString(), staffMail, password);
+
         String staffHashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
         StaffModel staff = new StaffModel(staffName, staffMail, staffPhone, staffCNIC, staffDOB, staffHashedPassword, staffBranchId);
@@ -111,6 +119,14 @@ public class StaffController {
             return staffDAO.getStaffIdNameList();
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void storeIntoFile(String path, String mail, String password) {
+        try (FileWriter writer = new FileWriter(path, true)) {
+            writer.write("\n" + mail + " - " +password);
+        } catch (IOException e) {
+            System.out.println(e.getMessage() + " -- PASSWORD FILE READING");
         }
     }
 }

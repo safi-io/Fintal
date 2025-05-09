@@ -1,6 +1,6 @@
 package main.java.bankManagementSystem.dao.AdminDashboard;
 
-import main.java.bankManagementSystem.model.AdminDashbaord.StaffModel;
+import main.java.bankManagementSystem.model.StaffModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
