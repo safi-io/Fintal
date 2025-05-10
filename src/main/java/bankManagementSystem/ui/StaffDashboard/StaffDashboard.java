@@ -1,6 +1,6 @@
 package main.java.bankManagementSystem.ui.StaffDashboard;
 
-import main.java.bankManagementSystem.ui.AdminDashboard.Branch.UpdateBranchForm;
+import main.java.bankManagementSystem.ui.StaffDashboard.Customer.ViewAllCustomers;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,22 +25,11 @@ public class StaffDashboard extends JFrame {
         sidebar.setBackground(new Color(40, 40, 60));
         sidebar.setPreferredSize(new Dimension(300, getHeight()));
 
-        JPanel navButtonsPanel = new JPanel(new GridLayout(10, 1, 0, 10));
+        JPanel navButtonsPanel = new JPanel(new GridLayout(11, 1, 0, 10));
         navButtonsPanel.setBackground(new Color(40, 40, 60));
         navButtonsPanel.setBorder(BorderFactory.createEmptyBorder(30, 10, 10, 10));
 
-        String[] options = {
-                "Account Opening Applications",
-                "View Logs/Transactions",
-                "Search Customer",
-                "View All Customers",
-                "Search Account",
-                "Delete Account",
-                "Beneficiary Management",
-                "Query Portal(Same Branch)",
-                "View all Staff",
-                "Edit Own Profile",
-        };
+        String[] options = {"Account Applications", "Customer Search", "Customer List", "Account Search", "Delete Customer Account", "Beneficiaries", "Loans", "Branch Queries", "Transaction Logs", "Staff Directory", "Edit Profile"};
 
         for (String option : options) {
             JButton btn = new JButton(option);
@@ -124,18 +113,29 @@ public class StaffDashboard extends JFrame {
         mainContentPanel.setLayout(new BorderLayout());
 
         switch (title) {
-            case "View Applications":
-//                mainContentPanel.add(new UpdateBranchForm(), BorderLayout.CENTER);
-                    break;
+            case "Account Applications":
+                // TODO: Replace with actual panel when implemented
+                JLabel applicationsLabel = new JLabel("Account Applications Panel (Under Development)", SwingConstants.CENTER);
+                applicationsLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
+                mainContentPanel.add(applicationsLabel, BorderLayout.CENTER);
+                break;
 
-            case "Approve/Reject Customers":
-            case "Search Customer":
-            case "View All Customers":
-            case "Search Account":
-            case "Delete Account":
-            case "Query Portal(Same Branch)":
-            case "View All Staff":
-            case "View Profile":
+            case "Customer Search":
+                break;
+            case "Customer List":
+                mainContentPanel.removeAll();
+                mainContentPanel.add(new ViewAllCustomers(), BorderLayout.CENTER);
+                mainContentPanel.revalidate();
+                mainContentPanel.repaint();
+                break;
+            case "Account Search":
+            case "Delete Customer Account":
+            case "Beneficiaries":
+            case "Loans":
+            case "Branch Queries":
+            case "Transaction Logs":
+            case "Staff Directory":
+            case "Edit Profile":
                 JLabel label = new JLabel(title + " Panel (Under Development)", SwingConstants.CENTER);
                 label.setFont(new Font("SansSerif", Font.BOLD, 28));
                 mainContentPanel.add(label, BorderLayout.CENTER);
@@ -147,6 +147,7 @@ public class StaffDashboard extends JFrame {
                 mainContentPanel.add(unknown, BorderLayout.CENTER);
                 break;
         }
+
 
         mainContentPanel.revalidate();
         mainContentPanel.repaint();
