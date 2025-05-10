@@ -1,5 +1,7 @@
 package main.java.bankManagementSystem.ui.StaffDashboard;
 
+import main.java.bankManagementSystem.ui.AdminDashboard.Branch.UpdateBranchForm;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -23,16 +25,21 @@ public class StaffDashboard extends JFrame {
         sidebar.setBackground(new Color(40, 40, 60));
         sidebar.setPreferredSize(new Dimension(300, getHeight()));
 
-        JPanel navButtonsPanel = new JPanel(new GridLayout(5, 1, 0, 10));
+        JPanel navButtonsPanel = new JPanel(new GridLayout(10, 1, 0, 10));
         navButtonsPanel.setBackground(new Color(40, 40, 60));
         navButtonsPanel.setBorder(BorderFactory.createEmptyBorder(30, 10, 10, 10));
 
         String[] options = {
-                "View Applications",
-                "Approve/Reject Customers",
+                "Account Opening Applications",
+                "View Logs/Transactions",
                 "Search Customer",
                 "View All Customers",
-                "Deposit / Adjust Balance"
+                "Search Account",
+                "Delete Account",
+                "Beneficiary Management",
+                "Query Portal(Same Branch)",
+                "View all Staff",
+                "Edit Own Profile",
         };
 
         for (String option : options) {
@@ -40,7 +47,7 @@ public class StaffDashboard extends JFrame {
             btn.setFocusPainted(false);
             btn.setBackground(new Color(70, 80, 100));
             btn.setForeground(Color.WHITE);
-            btn.setFont(new Font("SansSerif", Font.BOLD, 18)); // Match admin
+            btn.setFont(new Font("SansSerif", Font.BOLD, 18));
             btn.setBorderPainted(false);
             btn.setHorizontalAlignment(SwingConstants.LEFT);
             btn.setMargin(new Insets(10, 20, 10, 10));
@@ -114,32 +121,33 @@ public class StaffDashboard extends JFrame {
 
     private void updateMainPanel(String title) {
         mainContentPanel.removeAll();
-
-        JLabel label = new JLabel();
-        label.setFont(new Font("SansSerif", Font.BOLD, 28));
-        label.setHorizontalAlignment(SwingConstants.CENTER);
+        mainContentPanel.setLayout(new BorderLayout());
 
         switch (title) {
             case "View Applications":
-                label.setText("Viewing All Pending Applications");
-                break;
+//                mainContentPanel.add(new UpdateBranchForm(), BorderLayout.CENTER);
+                    break;
+
             case "Approve/Reject Customers":
-                label.setText("Approve or Reject Customer Requests");
-                break;
             case "Search Customer":
-                label.setText("Search for a Customer by ID or Name");
-                break;
             case "View All Customers":
-                label.setText("List of All Registered Customers");
+            case "Search Account":
+            case "Delete Account":
+            case "Query Portal(Same Branch)":
+            case "View All Staff":
+            case "View Profile":
+                JLabel label = new JLabel(title + " Panel (Under Development)", SwingConstants.CENTER);
+                label.setFont(new Font("SansSerif", Font.BOLD, 28));
+                mainContentPanel.add(label, BorderLayout.CENTER);
                 break;
-            case "Deposit / Adjust Balance":
-                label.setText("Deposit or Adjust Balance for a Customer");
-                break;
+
             default:
-                label.setText("Unknown Option: " + title);
+                JLabel unknown = new JLabel("Unknown Option: " + title, SwingConstants.CENTER);
+                unknown.setFont(new Font("SansSerif", Font.BOLD, 28));
+                mainContentPanel.add(unknown, BorderLayout.CENTER);
+                break;
         }
 
-        mainContentPanel.add(label, BorderLayout.CENTER);
         mainContentPanel.revalidate();
         mainContentPanel.repaint();
     }
