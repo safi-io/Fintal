@@ -1,6 +1,5 @@
 package main.java.bankManagementSystem.controller.StaffDashboard;
 
-import main.java.bankManagementSystem.dao.AdminDashboard.StaffDAO;
 import main.java.bankManagementSystem.dao.StaffDashboard.CustomerDAO;
 import main.java.bankManagementSystem.model.CustomerModel;
 
@@ -15,5 +14,9 @@ public class CustomerController {
 
     public List<CustomerModel> handleGetAllCustomers() {
         return customerDAO.getAllCustomers();
+    }
+
+    public CustomerModel handleGetCustomerByCNIC(String CNIC) {
+        return customerDAO.getCustomerByCNIC(CNIC);
     }
 }

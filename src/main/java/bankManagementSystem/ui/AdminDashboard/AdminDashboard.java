@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 
 public class AdminDashboard extends JFrame {
     private final JPanel mainContentPanel;
+    private JButton currentlySelectedButton;
 
     public AdminDashboard() {
         setTitle("Admin Dashboard");
@@ -49,7 +50,10 @@ public class AdminDashboard extends JFrame {
             btn.setBorderPainted(false);
             btn.setHorizontalAlignment(SwingConstants.LEFT);
             btn.setMargin(new Insets(10, 20, 10, 10));
-            btn.addActionListener(e -> updateMainPanel(option));
+            btn.addActionListener(e -> {
+                highlightSelectedButton(btn);
+                updateMainPanel(option);
+            });
             navButtonsPanel.add(btn);
         }
 
@@ -148,6 +152,18 @@ public class AdminDashboard extends JFrame {
         mainContentPanel.revalidate();
         mainContentPanel.repaint();
     }
+
+    private void highlightSelectedButton(JButton selectedButton) {
+        if (currentlySelectedButton != null) {
+            // Reset previous button
+            currentlySelectedButton.setBackground(new Color(70, 80, 100));
+        }
+
+        // Highlight current button
+        selectedButton.setBackground(new Color(100, 149, 237)); // Cornflower Blue
+        currentlySelectedButton = selectedButton;
+    }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

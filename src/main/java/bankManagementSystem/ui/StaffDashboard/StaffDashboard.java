@@ -1,5 +1,6 @@
 package main.java.bankManagementSystem.ui.StaffDashboard;
 
+import main.java.bankManagementSystem.ui.StaffDashboard.Customer.SearchCustomer;
 import main.java.bankManagementSystem.ui.StaffDashboard.Customer.ViewAllCustomers;
 
 import javax.swing.*;
@@ -10,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 public class StaffDashboard extends JFrame {
     private final JPanel mainContentPanel;
+    private JButton currentlySelectedButton;
 
     public StaffDashboard() {
         setTitle("Staff Dashboard");
@@ -40,7 +42,11 @@ public class StaffDashboard extends JFrame {
             btn.setBorderPainted(false);
             btn.setHorizontalAlignment(SwingConstants.LEFT);
             btn.setMargin(new Insets(10, 20, 10, 10));
-            btn.addActionListener(e -> updateMainPanel(option));
+            btn.addActionListener(e -> {
+                highlightSelectedButton(btn);
+                updateMainPanel(option);
+            });
+
             navButtonsPanel.add(btn);
         }
 
@@ -121,9 +127,15 @@ public class StaffDashboard extends JFrame {
                 break;
 
             case "Customer Search":
+                mainContentPanel.removeAll();
+
+                mainContentPanel.add(new SearchCustomer(), BorderLayout.CENTER);
+                mainContentPanel.revalidate();
+                mainContentPanel.repaint();
                 break;
             case "Customer List":
                 mainContentPanel.removeAll();
+
                 mainContentPanel.add(new ViewAllCustomers(), BorderLayout.CENTER);
                 mainContentPanel.revalidate();
                 mainContentPanel.repaint();
@@ -152,6 +164,18 @@ public class StaffDashboard extends JFrame {
         mainContentPanel.revalidate();
         mainContentPanel.repaint();
     }
+
+    private void highlightSelectedButton(JButton selectedButton) {
+        if (currentlySelectedButton != null) {
+            // Reset previous button
+            currentlySelectedButton.setBackground(new Color(70, 80, 100));
+        }
+
+        // Highlight current button
+        selectedButton.setBackground(new Color(100, 149, 237)); // Cornflower Blue
+        currentlySelectedButton = selectedButton;
+    }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

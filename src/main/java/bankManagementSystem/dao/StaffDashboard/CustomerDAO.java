@@ -2,6 +2,7 @@ package main.java.bankManagementSystem.dao.StaffDashboard;
 
 import main.java.bankManagementSystem.model.CustomerModel;
 
+import javax.xml.transform.Result;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -55,4 +56,32 @@ public class CustomerDAO {
 
         return customers;
     }
+
+    public CustomerModel getCustomerByCNIC(String CNIC) {
+        String query = "SELECT * FROM CUSTOMER WHERE CUSTOMER_CNIC = ?";
+        CustomerModel requiredCustomer = null;
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, CNIC);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                requiredCustomer = new CustomerModel(
+                        rs.getString("customer_CNIC"),
+                        rs.getString("customer_Name"),
+                        rs.getString("customer_Mail"),
+                        rs.getString("customer_Phone"),
+                        rs.getDate("customer_DOB").toLocalDate()
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to fetch customer: " + e.getMessage());
+        }
+
+        return requiredCustomer;
+    }
+
 }

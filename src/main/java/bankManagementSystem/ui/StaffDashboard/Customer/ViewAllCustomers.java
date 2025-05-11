@@ -6,6 +6,7 @@ import main.java.bankManagementSystem.model.CustomerModel;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.text.MessageFormat;
 import java.util.List;
 
 public class ViewAllCustomers extends JPanel {
@@ -32,19 +33,62 @@ public class ViewAllCustomers extends JPanel {
 
         JTable table = getJTable(customers);
         table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
+        table.getTableHeader().setReorderingAllowed(false); // prevent column drag
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
+
+        // Print Button
+        JButton printButton = new JButton("Print Table");
+        printButton.setFont(new Font("SansSerif", Font.BOLD, 16));
+        printButton.setBackground(new Color(60, 179, 113));
+        printButton.setForeground(Color.WHITE);
+        printButton.setFocusPainted(false);
+        printButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        printButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        printButton.addActionListener(e -> {
+            try {
+                boolean printed = table.print(JTable.PrintMode.FIT_WIDTH,
+                        new MessageFormat("Customer Table"),
+                        new MessageFormat("Page - {0}"));
+                if (!printed) {
+                    JOptionPane.showMessageDialog(this, "Printing was cancelled.", "Print", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Failed to print: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+// Add print button at the bottom
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setBackground(Color.WHITE);
+        bottomPanel.add(printButton);
+        add(bottomPanel, BorderLayout.SOUTH);
+
 
         add(scrollPane, BorderLayout.CENTER);
     }
 
     private static JTable getJTable(List<CustomerModel> customers) {
         String[] columnNames = {"CNIC", "Name", "Mail", "Phone", "DOB", "Password"};
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+
+        // Custom table model to make table non-editable
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // disable cell editing
+            }
+        };
 
         for (CustomerModel customer : customers) {
-            Object[] row = {customer.getCustomerCNIC(), customer.getCustomerName(), customer.getCustomerMail(), customer.getCustomerPhone(), customer.getCustomerDOB(), customer.getCustomerPassword()};
+            Object[] row = {
+                    customer.getCustomerCNIC(),
+                    customer.getCustomerName(),
+                    customer.getCustomerMail(),
+                    customer.getCustomerPhone(),
+                    customer.getCustomerDOB(),
+                    customer.getCustomerPassword()
+            };
             tableModel.addRow(row);
         }
 
