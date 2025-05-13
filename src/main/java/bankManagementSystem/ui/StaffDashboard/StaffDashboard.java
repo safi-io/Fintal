@@ -1,7 +1,8 @@
 package main.java.bankManagementSystem.ui.StaffDashboard;
 
-import main.java.bankManagementSystem.ui.StaffDashboard.Customer.SearchCustomer;
-import main.java.bankManagementSystem.ui.StaffDashboard.Customer.ViewAllCustomers;
+import main.java.bankManagementSystem.ui.StaffDashboard.Accounts.AccountsApplication;
+import main.java.bankManagementSystem.ui.StaffDashboard.Accounts.AccountData;
+import main.java.bankManagementSystem.ui.StaffDashboard.Customer.CustomerData;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +32,7 @@ public class StaffDashboard extends JFrame {
         navButtonsPanel.setBackground(new Color(40, 40, 60));
         navButtonsPanel.setBorder(BorderFactory.createEmptyBorder(30, 10, 10, 10));
 
-        String[] options = {"Account Applications", "Customer Search", "Customer List", "Account Search", "Delete Customer Account", "Beneficiaries", "Loans", "Branch Queries", "Transaction Logs", "Staff Directory", "Edit Profile"};
+        String[] options = {"Account Applications", "Customers Data", "Accounts Data", "Beneficiaries", "Loans", "Branch Queries", "Transaction Logs", "Staff Directory", "Edit Profile"};
 
         for (String option : options) {
             JButton btn = new JButton(option);
@@ -120,27 +121,23 @@ public class StaffDashboard extends JFrame {
 
         switch (title) {
             case "Account Applications":
-                // TODO: Replace with actual panel when implemented
-                JLabel applicationsLabel = new JLabel("Account Applications Panel (Under Development)", SwingConstants.CENTER);
-                applicationsLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
-                mainContentPanel.add(applicationsLabel, BorderLayout.CENTER);
-                break;
-
-            case "Customer Search":
                 mainContentPanel.removeAll();
-
-                mainContentPanel.add(new SearchCustomer(), BorderLayout.CENTER);
+                mainContentPanel.add(new AccountsApplication(), BorderLayout.CENTER);
                 mainContentPanel.revalidate();
                 mainContentPanel.repaint();
                 break;
-            case "Customer List":
+            case "Customers Data":
                 mainContentPanel.removeAll();
-
-                mainContentPanel.add(new ViewAllCustomers(), BorderLayout.CENTER);
+                mainContentPanel.add(new CustomerData(), BorderLayout.CENTER);
                 mainContentPanel.revalidate();
                 mainContentPanel.repaint();
                 break;
-            case "Account Search":
+            case "Accounts Data":
+                mainContentPanel.removeAll();
+                mainContentPanel.add(new AccountData(), BorderLayout.CENTER);
+                mainContentPanel.revalidate();
+                mainContentPanel.repaint();
+                break;
             case "Delete Customer Account":
             case "Beneficiaries":
             case "Loans":

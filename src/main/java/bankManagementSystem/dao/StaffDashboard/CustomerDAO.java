@@ -2,7 +2,6 @@ package main.java.bankManagementSystem.dao.StaffDashboard;
 
 import main.java.bankManagementSystem.model.CustomerModel;
 
-import javax.xml.transform.Result;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;

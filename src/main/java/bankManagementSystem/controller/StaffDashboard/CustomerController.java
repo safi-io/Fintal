@@ -19,4 +19,6 @@ public class CustomerController {
     public CustomerModel handleGetCustomerByCNIC(String CNIC) {
         return customerDAO.getCustomerByCNIC(CNIC);
     }
+
+
 }
