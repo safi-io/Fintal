@@ -32,7 +32,7 @@ public class StaffDashboard extends JFrame {
         navButtonsPanel.setBackground(new Color(40, 40, 60));
         navButtonsPanel.setBorder(BorderFactory.createEmptyBorder(30, 10, 10, 10));
 
-        String[] options = {"Account Applications", "Customers Data", "Accounts Data", "Beneficiaries", "Loans", "Branch Queries", "Transaction Logs", "Staff Directory", "Edit Profile"};
+        String[] options = {"Account Applications", "Customers Data", "Accounts Data", "Loans", "Transaction Logs", "Staff Directory", "Edit Profile"};
 
         for (String option : options) {
             JButton btn = new JButton(option);
@@ -138,10 +138,7 @@ public class StaffDashboard extends JFrame {
                 mainContentPanel.revalidate();
                 mainContentPanel.repaint();
                 break;
-            case "Delete Customer Account":
-            case "Beneficiaries":
             case "Loans":
-            case "Branch Queries":
             case "Transaction Logs":
             case "Staff Directory":
             case "Edit Profile":

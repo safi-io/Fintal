@@ -1,3 +1,5 @@
+USE bankManagementSystem;
+
 -- TRIGGERS FOR BANK MANAGEMENT SYSTEM
 
 -- TRIGGERS
