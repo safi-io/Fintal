@@ -1,7 +1,7 @@
 package main.java.bankManagementSystem.ui.StaffDashboard.Accounts;
 
 import main.java.bankManagementSystem.controller.StaffDashboard.AccountController;
-import main.java.bankManagementSystem.model.CustomerAccountModel;
+import main.java.bankManagementSystem.model.CustomerAccountBranchModel;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -156,9 +156,9 @@ public class AccountData extends JPanel {
 
     private void loadAllAccounts() {
         AccountController accountController = new AccountController();
-        List<CustomerAccountModel> accounts = accountController.handleGetAllAccounts();
+        List<CustomerAccountBranchModel> accounts = accountController.handleGetAllAccounts();
 
-        for (CustomerAccountModel acc : accounts) {
+        for (CustomerAccountBranchModel acc : accounts) {
             tableModel.addRow(new Object[]{
                     acc.getCustomerCNIC(),
                     acc.getCustomerName(),

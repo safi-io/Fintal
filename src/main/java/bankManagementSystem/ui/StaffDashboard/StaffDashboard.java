@@ -161,15 +161,12 @@ public class StaffDashboard extends JFrame {
 
     private void highlightSelectedButton(JButton selectedButton) {
         if (currentlySelectedButton != null) {
-            // Reset previous button
             currentlySelectedButton.setBackground(new Color(70, 80, 100));
         }
 
-        // Highlight current button
         selectedButton.setBackground(new Color(100, 149, 237)); // Cornflower Blue
         currentlySelectedButton = selectedButton;
     }
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

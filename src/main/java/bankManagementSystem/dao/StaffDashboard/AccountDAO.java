@@ -1,8 +1,7 @@
 package main.java.bankManagementSystem.dao.StaffDashboard;
 
 import main.java.bankManagementSystem.model.AccountModel;
-import main.java.bankManagementSystem.model.CustomerAccountModel;
-import main.java.bankManagementSystem.model.CustomerModel;
+import main.java.bankManagementSystem.model.CustomerAccountBranchModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,17 +35,17 @@ public class AccountDAO {
         }
     }
 
-    public List<CustomerAccountModel> getAccountApplications() {
+    public List<CustomerAccountBranchModel> getAccountApplications() {
         String query = "SELECT C.CUSTOMER_CNIC, C.CUSTOMER_NAME, C.CUSTOMER_MAIL, C.CUSTOMER_PHONE, " + "A.ACCOUNT_NUMBER, A.ACCOUNT_TYPE, A.ACCOUNT_OPENING_DATE, A.ACCOUNT_BRANCH_ID, B.BRANCH_NAME " + "FROM ACCOUNT AS A " + "INNER JOIN CUSTOMER AS C ON A.ACCOUNT_CUSTOMER_CNIC = C.CUSTOMER_CNIC " + "INNER JOIN BRANCH AS B ON B.BRANCH_ID = A.ACCOUNT_BRANCH_ID WHERE !A.ACCOUNT_IS_OPENED;";
 
 
-        List<CustomerAccountModel> accountsApplicationsList = new ArrayList<>();
+        List<CustomerAccountBranchModel> accountsApplicationsList = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
 
-                CustomerAccountModel accountApplication = new CustomerAccountModel(rs.getString("CUSTOMER_CNIC"), rs.getString("CUSTOMER_NAME"), rs.getString("CUSTOMER_MAIL"), rs.getString("CUSTOMER_PHONE"), rs.getString("ACCOUNT_NUMBER"), rs.getString("ACCOUNT_TYPE"), rs.getDate("ACCOUNT_OPENING_DATE").toLocalDate(), rs.getString("ACCOUNT_BRANCH_ID"), rs.getString("BRANCH_NAME"));
+                CustomerAccountBranchModel accountApplication = new CustomerAccountBranchModel(rs.getString("CUSTOMER_CNIC"), rs.getString("CUSTOMER_NAME"), rs.getString("CUSTOMER_MAIL"), rs.getString("CUSTOMER_PHONE"), rs.getString("ACCOUNT_NUMBER"), rs.getString("ACCOUNT_TYPE"), rs.getDate("ACCOUNT_OPENING_DATE").toLocalDate(), rs.getString("ACCOUNT_BRANCH_ID"), rs.getString("BRANCH_NAME"));
 
                 accountsApplicationsList.add(accountApplication);
             }
@@ -93,16 +92,16 @@ public class AccountDAO {
         }
     }
 
-    public List<CustomerAccountModel> getAllAccounts() {
+    public List<CustomerAccountBranchModel> getAllAccounts() {
         String query = "SELECT C.CUSTOMER_CNIC, C.CUSTOMER_NAME, C.CUSTOMER_MAIL, C.CUSTOMER_PHONE, " + "A.ACCOUNT_NUMBER,A.ACCOUNT_CURRENT_BALANCE, A.ACCOUNT_TYPE, A.ACCOUNT_OPENING_DATE, A.ACCOUNT_BRANCH_ID, B.BRANCH_NAME " + "FROM ACCOUNT AS A " + "INNER JOIN CUSTOMER AS C ON A.ACCOUNT_CUSTOMER_CNIC = C.CUSTOMER_CNIC " + "INNER JOIN BRANCH AS B ON B.BRANCH_ID = A.ACCOUNT_BRANCH_ID WHERE A.ACCOUNT_IS_OPENED AND !A.ACCOUNT_IS_DELETED";
 
-        List<CustomerAccountModel> accountsList = new ArrayList<>();
+        List<CustomerAccountBranchModel> accountsList = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
 
-                CustomerAccountModel accountApplication = new CustomerAccountModel(rs.getString("CUSTOMER_CNIC"), rs.getString("CUSTOMER_NAME"), rs.getString("CUSTOMER_MAIL"), rs.getString("CUSTOMER_PHONE"), rs.getString("ACCOUNT_NUMBER"), rs.getBigDecimal("ACCOUNT_CURRENT_BALANCE"), rs.getString("ACCOUNT_TYPE"), rs.getDate("ACCOUNT_OPENING_DATE").toLocalDate(), rs.getString("ACCOUNT_BRANCH_ID"), rs.getString("BRANCH_NAME"));
+                CustomerAccountBranchModel accountApplication = new CustomerAccountBranchModel(rs.getString("CUSTOMER_CNIC"), rs.getString("CUSTOMER_NAME"), rs.getString("CUSTOMER_MAIL"), rs.getString("CUSTOMER_PHONE"), rs.getString("ACCOUNT_NUMBER"), rs.getBigDecimal("ACCOUNT_CURRENT_BALANCE"), rs.getString("ACCOUNT_TYPE"), rs.getDate("ACCOUNT_OPENING_DATE").toLocalDate(), rs.getString("ACCOUNT_BRANCH_ID"), rs.getString("BRANCH_NAME"));
 
                 accountsList.add(accountApplication);
             }

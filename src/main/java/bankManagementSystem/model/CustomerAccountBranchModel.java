@@ -3,7 +3,7 @@ package main.java.bankManagementSystem.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class CustomerAccountModel {
+public class CustomerAccountBranchModel {
     // Customer Fields
     private String customerCNIC;
     private String customerName;
@@ -19,13 +19,14 @@ public class CustomerAccountModel {
     private boolean accountIsOpened;
     private boolean accountIsDeleted;
     private LocalDate accountOpeningDate;
+    private LocalDate accountLastLogin;
     private String accountCustomerCNIC;
     private String accountCustomerBranchID;
 
     // Branch Fields
     private String customerBranch;
 
-    public CustomerAccountModel(String customerCNIC, String customerName, String customerMail, String customerPhone, String accountNumber, String accountType, LocalDate accountOpeningDate, String accountCustomerBranchID, String customerBranch) {
+    public CustomerAccountBranchModel(String customerCNIC, String customerName, String customerMail, String customerPhone, String accountNumber, String accountType, LocalDate accountOpeningDate, String accountCustomerBranchID, String customerBranch) {
         this.customerCNIC = customerCNIC;
         this.customerName = customerName;
         this.customerMail = customerMail;
@@ -37,7 +38,7 @@ public class CustomerAccountModel {
         this.customerBranch = customerBranch;
     }
 
-    public CustomerAccountModel(String customerCNIC, String customerName, String customerMail, String customerPhone, String accountNumber, BigDecimal accountCurrentBalance, String accountType, LocalDate accountOpeningDate, String accountCustomerBranchID, String customerBranch) {
+    public CustomerAccountBranchModel(String customerCNIC, String customerName, String customerMail, String customerPhone, String accountNumber, BigDecimal accountCurrentBalance, String accountType, LocalDate accountOpeningDate, String accountCustomerBranchID, String customerBranch) {
         this.customerCNIC = customerCNIC;
         this.customerName = customerName;
         this.customerMail = customerMail;

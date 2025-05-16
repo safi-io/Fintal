@@ -1,7 +1,7 @@
 package main.java.bankManagementSystem.controller.StaffDashboard;
 
 import main.java.bankManagementSystem.dao.StaffDashboard.AccountDAO;
-import main.java.bankManagementSystem.model.CustomerAccountModel;
+import main.java.bankManagementSystem.model.CustomerAccountBranchModel;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class AccountController {
         this.accountDAO = new AccountDAO();
     }
 
-    public List<CustomerAccountModel> handleGetAccountApplications() {
+    public List<CustomerAccountBranchModel> handleGetAccountApplications() {
         return accountDAO.getAccountApplications();
     }
 
@@ -20,7 +20,7 @@ public class AccountController {
         return accountDAO.approveAccount(accountNumber);
     }
 
-    public List<CustomerAccountModel> handleGetAllAccounts() {
+    public List<CustomerAccountBranchModel> handleGetAllAccounts() {
         return accountDAO.getAllAccounts();
     }
 

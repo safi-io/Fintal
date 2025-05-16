@@ -1,7 +1,7 @@
 package main.java.bankManagementSystem.ui.StaffDashboard.Accounts;
 
 import main.java.bankManagementSystem.controller.StaffDashboard.AccountController;
-import main.java.bankManagementSystem.model.CustomerAccountModel;
+import main.java.bankManagementSystem.model.CustomerAccountBranchModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -84,7 +84,7 @@ public class AccountsApplication extends JPanel {
     public void loadTableData() {
         tableModel.setRowCount(0);
 
-        List<CustomerAccountModel> accounts;
+        List<CustomerAccountBranchModel> accounts;
         try {
             accounts = accountController.handleGetAccountApplications();
             if (accounts.isEmpty()) {
@@ -96,7 +96,7 @@ public class AccountsApplication extends JPanel {
             return;
         }
 
-        for (CustomerAccountModel account : accounts) {
+        for (CustomerAccountBranchModel account : accounts) {
             tableModel.addRow(new Object[]{formatTitleCase(account.getCustomerCNIC()), formatTitleCase(account.getCustomerName()), formatTitleCase(account.getCustomerMail()), formatTitleCase(account.getCustomerPhone()), formatTitleCase(account.getAccountNumber()), formatTitleCase(account.getAccountType()), formatTitleCase(account.getAccountOpeningDate().toString()), formatTitleCase(account.getAccountCustomerBranchID()), formatTitleCase(account.getCustomerBranch()), "Approve"});
         }
     }
