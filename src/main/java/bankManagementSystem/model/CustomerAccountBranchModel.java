@@ -26,6 +26,18 @@ public class CustomerAccountBranchModel {
     // Branch Fields
     private String customerBranch;
 
+    // For Dashboard Data
+    public CustomerAccountBranchModel(String accountNumber, String accountType, BigDecimal accountCurrentBalance, LocalDate accountOpeningDate, LocalDate accountLastLogin, String customerBranch, String customerName) {
+        this.accountNumber = accountNumber;
+        this.accountType = accountType;
+        this.accountCurrentBalance = accountCurrentBalance;
+        this.accountOpeningDate = accountOpeningDate;
+        this.accountLastLogin = accountLastLogin;
+        this.customerBranch = customerBranch;
+        this.customerName = customerName;
+    }
+
+
     public CustomerAccountBranchModel(String customerCNIC, String customerName, String customerMail, String customerPhone, String accountNumber, String accountType, LocalDate accountOpeningDate, String accountCustomerBranchID, String customerBranch) {
         this.customerCNIC = customerCNIC;
         this.customerName = customerName;
@@ -109,5 +121,9 @@ public class CustomerAccountBranchModel {
 
     public String getCustomerBranch() {
         return customerBranch;
+    }
+
+    public LocalDate getAccountLastLogin() {
+        return accountLastLogin;
     }
 }

@@ -1,7 +1,7 @@
 package main.java.bankManagementSystem.ui.CustomerDashboard.BuildDashboard;
 
 import main.java.bankManagementSystem.controller.CustomerDashboard.AccountController;
-import main.java.bankManagementSystem.model.AccountBranchModel;
+import main.java.bankManagementSystem.model.CustomerAccountBranchModel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -11,34 +11,43 @@ import static main.java.bankManagementSystem.ui.CustomerDashboard.CustomerDashbo
 
 public class MainDashboard {
 
-
     public static JPanel buildDashboard() {
 
         AccountController accountController = new AccountController();
-
-        AccountBranchModel data = accountController.handleGetDashboardData("20");
+        CustomerAccountBranchModel data = accountController.handleGetDashboardData("20");
 
         JPanel p = new JPanel(new GridBagLayout());
         p.setOpaque(false);
         p.setBorder(new EmptyBorder(60, 60, 60, 60));
+
         GridBagConstraints g = new GridBagConstraints();
-        g.insets = new Insets(25, 25, 25, 25);
-        g.fill = GridBagConstraints.BOTH;
+        g.insets  = new Insets(25, 25, 25, 25);
+        g.fill    = GridBagConstraints.BOTH;
         g.weightx = g.weighty = 1;
 
-        System.out.println(data.getAccountCurrentBalance().toBigInteger().doubleValue());
-
-        JPanel[] cards = {statCard(new Utils.CounterLabel(0, data.getAccountCurrentBalance().doubleValue(), 2500), "Total Balance", 48, new Color(0, 150, 90)), statCard(new Utils.AlphaFadeLabel(data.getAccountNumber(), 1000), "Account Number", 36, new Color(30, 30, 30)), statCard(new Utils.AlphaFadeLabel(data.getAccountLastLogin().toString(), 1000), "Last Login", 28, new Color(50, 50, 50)), statCard(new Utils.AlphaFadeLabel(data.getCustomerBranch().toUpperCase(), 1000), "Branch Name", 28, new Color(50, 50, 50)), statCard(new Utils.AlphaFadeLabel(data.getAccountType().toUpperCase(), 1000), "Account Type", 28, new Color(50, 50, 50)), statCard(new Utils.AlphaFadeLabel(data.getAccountOpeningDate().toString(), 1000), "Account Opening Date", 28, new Color(50, 50, 50))};
+        JPanel[] cards = {
+                /* 0 */ statCard(new Utils.CounterLabel(0, data.getAccountCurrentBalance().doubleValue(), 2500),
+                "Total Balance", 48, new Color(0, 150, 90)),
+                /* 1 */ statCard(new Utils.AlphaFadeLabel(data.getAccountNumber(), 1000),
+                "Account Number", 36, new Color(30, 30, 30)),
+                /* 2 */ statCard(new Utils.AlphaFadeLabel(data.getCustomerName().toUpperCase(), 1000),
+                "Customer Name", 28, new Color(50, 50, 50)),
+                /* 3 */ statCard(new Utils.AlphaFadeLabel(data.getAccountLastLogin().toString(), 1000),
+                "Last Login", 28, new Color(50, 50, 50)),
+                /* 4 */ statCard(new Utils.AlphaFadeLabel(data.getCustomerBranch().toUpperCase(), 1000),
+                "Branch Name", 28, new Color(50, 50, 50)),
+                /* 5 */ statCard(new Utils.AlphaFadeLabel(data.getAccountType().toUpperCase(), 1000),
+                "Account Type", 28, new Color(50, 50, 50)),
+                /* 6 */ statCard(new Utils.AlphaFadeLabel(data.getAccountOpeningDate().toString(), 1000),
+                "Account Opening Date", 28, new Color(50, 50, 50))
+        };
 
         int row = 0, col = 0;
         for (JPanel c : cards) {
             g.gridy = row;
             g.gridx = col;
             p.add(c, g);
-            if (++col == 3) {
-                col = 0;
-                row++;
-            }
+            if (++col == 3) { col = 0; row++; }
         }
         return p;
     }
@@ -47,9 +56,11 @@ public class MainDashboard {
         value.setFont(new Font("SansSerif", Font.BOLD, size));
         value.setHorizontalAlignment(SwingConstants.CENTER);
         value.setForeground(color);
+
         JLabel sub = new JLabel(title, SwingConstants.CENTER);
         sub.setFont(new Font("SansSerif", Font.PLAIN, 20));
         sub.setForeground(Color.DARK_GRAY);
+
         JPanel card = new Utils.RoundedPanel(20);
         card.setBackground(CARD_BG);
         card.setLayout(new BorderLayout());

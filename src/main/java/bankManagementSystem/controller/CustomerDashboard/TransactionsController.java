@@ -1,6 +1,6 @@
 package main.java.bankManagementSystem.controller.CustomerDashboard;
 
-import main.java.bankManagementSystem.dao.StaffDashboard.TransactionsDAO;
+import main.java.bankManagementSystem.dao.CustomerDashborad.TransactionsDAO;
 import main.java.bankManagementSystem.model.TransactionCustomerModel;
 
 import java.util.List;

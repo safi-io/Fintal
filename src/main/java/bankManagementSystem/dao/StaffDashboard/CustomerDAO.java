@@ -56,6 +56,35 @@ public class CustomerDAO {
         return customers;
     }
 
+    public CustomerModel handleGetCustomerByAccountNumber(String accountNumber) {
+        String query = "SELECT * FROM customer c " +
+                "JOIN account a ON c.customer_cnic = a.account_customer_cnic " +
+                "WHERE a.account_number = ?";
+        CustomerModel requiredCustomer = null;
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, accountNumber);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                requiredCustomer = new CustomerModel(
+                        rs.getString("customer_CNIC"),
+                        rs.getString("customer_Name"),
+                        rs.getString("customer_Mail"),
+                        rs.getString("customer_Phone"),
+                        rs.getDate("customer_DOB").toLocalDate()
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to fetch customer: " + e.getMessage());
+        }
+
+        return requiredCustomer;
+    }
+
     public CustomerModel getCustomerByCNIC(String CNIC) {
         String query = "SELECT * FROM CUSTOMER WHERE CUSTOMER_CNIC = ?";
         CustomerModel requiredCustomer = null;
@@ -82,5 +111,49 @@ public class CustomerDAO {
 
         return requiredCustomer;
     }
+    public boolean updateCustomerByAccountNumber(String accountNumber, String name, String email, String phone, String password) {
+        StringBuilder query = new StringBuilder("UPDATE customer SET ");
+        List<String> fields = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
+
+        // Conditionally add fields
+        if (name != null && !name.isEmpty()) {
+            fields.add("customer_Name = ?");
+            values.add(name);
+        }
+        if (email != null && !email.isEmpty()) {
+            fields.add("customer_Mail = ?");
+            values.add(email);
+        }
+        if (phone != null && !phone.isEmpty()) {
+            fields.add("customer_Phone = ?");
+            values.add(phone);
+        }
+        if (password != null && !password.isEmpty()) {
+            fields.add("customer_Password = ?");
+            values.add(password);
+        }
+
+        if (fields.isEmpty()) return false; // Nothing to update
+
+        query.append(String.join(", ", fields));
+        query.append(" WHERE customer_CNIC = (SELECT account_customer_cnic FROM account WHERE account_number = ?)");
+
+        values.add(accountNumber); // add at the end
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+
+            for (int i = 0; i < values.size(); i++) {
+                stmt.setObject(i + 1, values.get(i));
+            }
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
 }
