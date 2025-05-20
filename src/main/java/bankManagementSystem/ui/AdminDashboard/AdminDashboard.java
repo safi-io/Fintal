@@ -17,6 +17,10 @@ public class AdminDashboard extends JFrame {
     private final JPanel mainContentPanel;
     private JButton currentlySelectedButton;
 
+    // Define consistent colors
+    private static final Color NAV_BTN_BG = new Color(60, 63, 65);
+    private static final Color NAV_BTN_SELECTED = new Color(100, 149, 237);
+
     public AdminDashboard() {
         setTitle("Admin Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -24,7 +28,6 @@ public class AdminDashboard extends JFrame {
         setResizable(false);
         setUndecorated(true);
 
-        // Main container
         JPanel container = new JPanel(new BorderLayout());
 
         // Sidebar
@@ -44,7 +47,7 @@ public class AdminDashboard extends JFrame {
         for (String option : options) {
             JButton btn = new JButton(option);
             btn.setFocusPainted(false);
-            btn.setBackground(new Color(60, 63, 65));
+            btn.setBackground(NAV_BTN_BG);
             btn.setForeground(Color.WHITE);
             btn.setFont(new Font("SansSerif", Font.BOLD, 18));
             btn.setBorderPainted(false);
@@ -83,7 +86,6 @@ public class AdminDashboard extends JFrame {
 
         // Main content panel
         mainContentPanel = new JPanel();
-
         mainContentPanel.setLayout(new BorderLayout());
         mainContentPanel.setBackground(Color.WHITE);
 
@@ -93,7 +95,7 @@ public class AdminDashboard extends JFrame {
 
         // Heading panel
         JPanel headingPanel = new JPanel(new BorderLayout());
-        headingPanel.setBackground(new Color(100, 149, 237));
+        headingPanel.setBackground(NAV_BTN_SELECTED); // Same as selected color
         headingPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
         JLabel heading = new JLabel("ADMIN DASHBOARD", SwingConstants.LEFT);
@@ -155,15 +157,12 @@ public class AdminDashboard extends JFrame {
 
     private void highlightSelectedButton(JButton selectedButton) {
         if (currentlySelectedButton != null) {
-            // Reset previous button
-            currentlySelectedButton.setBackground(new Color(70, 80, 100));
+            currentlySelectedButton.setBackground(NAV_BTN_BG);
         }
 
-        // Highlight current button
-        selectedButton.setBackground(new Color(100, 149, 237)); // Cornflower Blue
+        selectedButton.setBackground(NAV_BTN_SELECTED);
         currentlySelectedButton = selectedButton;
     }
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

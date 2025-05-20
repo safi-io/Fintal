@@ -3,105 +3,167 @@ package main.java.bankManagementSystem.ui.AdminDashboard.Branch;
 import main.java.bankManagementSystem.controller.AdminDashboard.BranchController;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
 public class DeleteBranchForm extends JPanel {
 
-    private JComboBox<String> branchComboBox;
-    private final BranchController branchController;
+    private final JComboBox<String> branchDropdown = new JComboBox<>();
+    private final JLabel statusLabel = new JLabel(" ");
+    private final BranchController branchController = new BranchController();
+
+    /* --- Constants --- */
+    private static final Color BG_COLOR       = new Color(245, 248, 250);
+    private static final Color CARD_BG        = Color.WHITE;
+    private static final Color DELETE_COLOR   = new Color(255, 69, 58);
+    private static final Color DELETE_HOVER   = new Color(220, 50, 40);
+    private static final Color TEXT_PRIMARY   = new Color(33, 33, 33);
+    private static final Color TEXT_SECONDARY = new Color(120, 120, 120);
+    private static final Color ERROR_COLOR    = new Color(255, 0, 0);
+    private static final Color SUCCESS_COLOR  = new Color(48, 209, 88);
 
     public DeleteBranchForm() {
-        branchController = new BranchController();
-        updateComboBox();
         setLayout(new GridBagLayout());
-        setBackground(Color.WHITE);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 20, 10, 20);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        setBackground(BG_COLOR);
 
-        Font labelFont = new Font("SansSerif", Font.BOLD, 16);
-        Font fieldFont = new Font("SansSerif", Font.PLAIN, 16);
+        RoundedShadowPanel card = new RoundedShadowPanel(20);
+        card.setLayout(new GridBagLayout());
+        card.setBorder(new EmptyBorder(40, 50, 50, 50));
+        card.setBackground(CARD_BG);
 
-        // Heading Label
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.insets = new Insets(15, 20, 15, 20);
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.weightx = 1;
+        gc.anchor = GridBagConstraints.WEST;
+
+        int row = 0;
+
+        /* --- Heading --- */
+        gc.gridx = 0; gc.gridy = row++; gc.gridwidth = 2;
         JLabel heading = new JLabel("Delete Branch");
-        heading.setFont(new Font("SansSerif", Font.BOLD, 26));
-        heading.setHorizontalAlignment(SwingConstants.CENTER);
-        gbc.gridwidth = 2;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(heading, gbc);
+        heading.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        heading.setForeground(TEXT_PRIMARY);
+        card.add(heading, gc);
+        gc.gridwidth = 1;
 
-        // Label for ComboBox
-        gbc.gridwidth = 1;
-        gbc.gridy++;
+        /* --- Branch Dropdown --- */
+        styleComboBox(branchDropdown);
+        addLabeledField(card, gc, row++, "Select Branch", branchDropdown);
 
-        JLabel selectBranchLabel = new JLabel("Select Branch ID:");
-        selectBranchLabel.setFont(labelFont);
-        gbc.gridx = 0;
-        add(selectBranchLabel, gbc);
+        /* --- Delete Button --- */
+        gc.gridx = 0; gc.gridy = row++; gc.gridwidth = 2;
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.setOpaque(false);
 
-        // ComboBox for Branch IDs
-
-        // DB OPERATION NEEDED HERE TODO
-        branchComboBox.setFont(fieldFont);
-        gbc.gridx = 1;
-        add(branchComboBox, gbc);
-
-        // Delete Button
-        gbc.gridy++;
-        gbc.gridwidth = 2;
-        gbc.gridx = 0;
         JButton deleteButton = new JButton("Delete Branch");
-        deleteButton.setFont(new Font("SansSerif", Font.BOLD, 18));
-        deleteButton.setBackground(new Color(255, 69, 0)); // Red color for delete
-        deleteButton.setForeground(Color.WHITE);
-        deleteButton.setFocusPainted(false);
-        deleteButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        deleteButton.setPreferredSize(new Dimension(200, 40));
+        styleFlatButton(deleteButton, DELETE_COLOR, DELETE_HOVER);
+        buttonPanel.add(deleteButton);
+        card.add(buttonPanel, gc);
+
+        /* --- Status --- */
+        gc.gridy = row;
+        statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        card.add(statusLabel, gc);
+
+        add(card);
+
+        loadBranchList();
 
         deleteButton.addActionListener((ActionEvent e) -> {
-            String selectedBranchIdFull = (String) branchComboBox.getSelectedItem();
-            String selectedBranchId = selectedBranchIdFull.split(" - ")[0];
+            String selected = (String) branchDropdown.getSelectedItem();
+            if (selected == null || selected.isEmpty()) {
+                setStatus("No branch selected.", true);
+                return;
+            }
 
-            try {
-                if (selectedBranchId != null) {
+            String selectedId = selected.split(" - ")[0];
 
-                    // Need Validation here
-                    int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this branch?", "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-                    if (result == JOptionPane.YES_OPTION) {
-                        boolean isDeleted = branchController.handleDeleteBranch(selectedBranchId);
-                        if (isDeleted) {
-                            JOptionPane.showMessageDialog(this, "Branch deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                        } else {
-                            JOptionPane.showMessageDialog(this, "Failed to delete branch.", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                        updateComboBox();
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this branch?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    boolean deleted = branchController.handleDeleteBranch(selectedId);
+                    if (deleted) {
+                        setStatus("Branch deleted successfully.", false);
+                        loadBranchList();
+                    } else {
+                        setStatus("Failed to delete branch.", true);
                     }
+                } catch (RuntimeException ex) {
+                    setStatus("Error: " + ex.getMessage(), true);
                 }
-            } catch (RuntimeException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-
-        add(deleteButton, gbc);
     }
 
-    private void updateComboBox() {
-        List<String> idNameList = branchController.handleGetBranchIdNameList();
-        if(idNameList.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No Branches Currently in the System", "Error", JOptionPane.ERROR_MESSAGE);
-            branchComboBox.removeAllItems();
-            return;
-        }
-        if (branchComboBox == null) {
-            branchComboBox = new JComboBox<>(idNameList.toArray(new String[0]));
-        } else {
-            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(idNameList.toArray(new String[0]));
-            branchComboBox.setModel(model);
+    private void loadBranchList() {
+        try {
+            List<String> list = branchController.handleGetBranchIdNameList();
+            if (list == null || list.isEmpty()) {
+                setStatus("No branches found in the system.", true);
+                branchDropdown.removeAllItems();
+                return;
+            }
+
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(list.toArray(new String[0]));
+            branchDropdown.setModel(model);
+            setStatus("Select a branch to delete.", false);
+        } catch (Exception e) {
+            setStatus("Error loading branch list.", true);
         }
     }
 
+    private void setStatus(String message, boolean isError) {
+        statusLabel.setText(message);
+        statusLabel.setForeground(isError ? ERROR_COLOR : SUCCESS_COLOR.darker());
+    }
+
+    private void addLabeledField(JPanel panel, GridBagConstraints gc, int row, String label, JComponent input) {
+        gc.gridx = 0; gc.gridy = row;
+        JLabel lbl = new JLabel(label);
+        lbl.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lbl.setForeground(TEXT_SECONDARY);
+        panel.add(lbl, gc);
+
+        gc.gridx = 1;
+        panel.add(input, gc);
+    }
+
+    private void styleComboBox(JComboBox<?> combo) {
+        combo.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        combo.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
+    }
+
+    private void styleFlatButton(JButton b, Color base, Color hover) {
+        b.setBackground(base);
+        b.setForeground(Color.WHITE);
+        b.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        b.setBorder(BorderFactory.createEmptyBorder(8, 18, 8, 18));
+        b.setFocusPainted(false);
+        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        b.setOpaque(true);
+        b.setContentAreaFilled(true);
+        b.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) { b.setBackground(hover); }
+            public void mouseExited(java.awt.event.MouseEvent e) { b.setBackground(base); }
+        });
+    }
+
+    /* === Shadow Panel === */
+    private static class RoundedShadowPanel extends JPanel {
+        private final int radius;
+        RoundedShadowPanel(int r) { this.radius = r; setOpaque(false); }
+        @Override protected void paintComponent(Graphics g) {
+            int shadowGap = 6, shadowOffset = 4;
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(new Color(0, 0, 0, 30));
+            g2.fillRoundRect(shadowOffset, shadowOffset, getWidth() - shadowGap, getHeight() - shadowGap, radius, radius);
+            g2.setColor(getBackground());
+            g2.fillRoundRect(0, 0, getWidth() - shadowGap - shadowOffset, getHeight() - shadowGap - shadowOffset, radius, radius);
+            g2.dispose(); super.paintComponent(g);
+        }
+    }
 }

@@ -4,13 +4,24 @@ import main.java.bankManagementSystem.controller.AdminDashboard.BranchController
 import main.java.bankManagementSystem.controller.AdminDashboard.StaffController;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class CreateStaffForm extends JPanel {
+    // Match the color scheme from StaffProfileSettings
+    private static final Color BG_COLOR = new Color(250, 252, 254);
+    private static final Color CARD_BG = Color.WHITE;
+    private static final Color PRIMARY = new Color(10, 132, 255);
+    private static final Color ACCENT = new Color(48, 209, 88);
+    private static final Color TEXT_PRIMARY = new Color(33, 33, 33);
+    private static final Color TEXT_SECONDARY = new Color(120, 120, 120);
+    private static final Color ERROR_COLOR = new Color(255, 69, 58);
 
     private final JTextField nameField;
     private final JTextField emailField;
@@ -20,6 +31,7 @@ public class CreateStaffForm extends JPanel {
     private final JComboBox<String> monthDropdown;
     private final JComboBox<Integer> yearDropdown;
     private final JComboBox<String> branchDropdown;
+    private final JLabel statusLbl = new JLabel(" ");
     private final StaffController staffController;
     private final BranchController branchController;
 
@@ -27,86 +39,119 @@ public class CreateStaffForm extends JPanel {
         staffController = new StaffController();
         branchController = new BranchController();
         branchDropdown = new JComboBox<>();
+
+        // Set overall panel properties
         setLayout(new GridBagLayout());
-        setBackground(Color.WHITE);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 20, 10, 20);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        setBackground(BG_COLOR);
 
-        Font labelFont = new Font("SansSerif", Font.BOLD, 16);
-        Font fieldFont = new Font("SansSerif", Font.PLAIN, 16);
+        // Create the main card panel with rounded corners and shadow
+        RoundedShadowPanel card = new RoundedShadowPanel(20);
+        card.setBackground(CARD_BG);
+        card.setBorder(new EmptyBorder(40, 50, 50, 50));
+        card.setLayout(new GridBagLayout());
 
-        JLabel heading = new JLabel("Create New Staff");
-        heading.setFont(new Font("SansSerif", Font.BOLD, 26));
-        heading.setHorizontalAlignment(SwingConstants.CENTER);
-        gbc.gridwidth = 2;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(heading, gbc);
+        // Setup grid constraints
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.insets = new Insets(15, 20, 15, 20);
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.weightx = 1;
+        gc.anchor = GridBagConstraints.WEST;
 
-        gbc.gridwidth = 1;
-        gbc.gridy++;
+        int row = 0;
 
-        addLabeledField("Name:", nameField = new JTextField(20), gbc, labelFont, fieldFont);
-        addLabeledField("Email:", emailField = new JTextField(20), gbc, labelFont, fieldFont);
-        addLabeledField("Phone:", phoneField = new JTextField(20), gbc, labelFont, fieldFont);
-        addLabeledField("CNIC:", cnicField = new JTextField(20), gbc, labelFont, fieldFont);
+        // Add heading
+        gc.gridx = 0;
+        gc.gridy = row++;
+        gc.gridwidth = 2;
+        JLabel titleLabel = new JLabel("Create New Staff");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        titleLabel.setForeground(TEXT_PRIMARY);
+        card.add(titleLabel, gc);
 
-        // DOB Dropdowns
-        gbc.gridy++;
-        JLabel dobLabel = new JLabel("Date of Birth:");
-        dobLabel.setFont(labelFont);
-        gbc.gridx = 0;
-        add(dobLabel, gbc);
+        // Create fields
+        nameField = new JTextField(20);
+        emailField = new JTextField(20);
+        phoneField = new JTextField(20);
+        cnicField = new JTextField(20);
 
+        // Add fields to form
+        addLabeledField(card, gc, row++, "Name", nameField, "Enter staff's full name");
+        addLabeledField(card, gc, row++, "Email", emailField, "Enter staff's email address");
+        addLabeledField(card, gc, row++, "Phone", phoneField, "Enter staff's phone number");
+        addLabeledField(card, gc, row++, "CNIC", cnicField, "Enter staff's CNIC number");
+
+        // DOB Selection
+        gc.gridx = 0;
+        gc.gridy = row;
+        gc.gridwidth = 1;
+        JLabel dobLabel = new JLabel("Date of Birth");
+        dobLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        dobLabel.setForeground(TEXT_SECONDARY);
+        card.add(dobLabel, gc);
+
+        // DOB Components in a panel
         JPanel dobPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        dobPanel.setBackground(Color.WHITE);
+        dobPanel.setOpaque(false);
 
         // Day 1–31
         Integer[] days = IntStream.rangeClosed(1, 31).boxed().toArray(Integer[]::new);
         dayDropdown = new JComboBox<>(days);
+        styleComboBox(dayDropdown);
 
         // Months Jan–Dec
         String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
         monthDropdown = new JComboBox<>(months);
+        styleComboBox(monthDropdown);
 
         // Year: 1950 to current year - 18
         int currentYear = LocalDate.now().getYear();
         Integer[] years = IntStream.rangeClosed(1950, currentYear - 18).boxed().toArray(Integer[]::new);
         yearDropdown = new JComboBox<>(years);
+        styleComboBox(yearDropdown);
 
-        // Add to panel
         dobPanel.add(dayDropdown);
         dobPanel.add(monthDropdown);
         dobPanel.add(yearDropdown);
 
-        gbc.gridx = 1;
-        add(dobPanel, gbc);
+        gc.gridx = 1;
+        card.add(dobPanel, gc);
+        row++;
 
-        // Branch
-        gbc.gridy++;
-        JLabel branchLabel = new JLabel("Branch:");
-        branchLabel.setFont(labelFont);
-        gbc.gridx = 0;
-        add(branchLabel, gbc);
+        // Branch Selection
+        gc.gridx = 0;
+        gc.gridy = row;
+        JLabel branchLabel = new JLabel("Branch");
+        branchLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        branchLabel.setForeground(TEXT_SECONDARY);
+        card.add(branchLabel, gc);
 
+        // Load branch data and style dropdown
         loadBranchIds();
-        branchDropdown.setFont(fieldFont);
-        gbc.gridx = 1;
-        add(branchDropdown, gbc);
+        styleComboBox(branchDropdown);
 
-        // Submit Button
-        gbc.gridy++;
-        gbc.gridwidth = 2;
-        gbc.gridx = 0;
+        gc.gridx = 1;
+        card.add(branchDropdown, gc);
+        row++;
+
+        // Create button panel
+        gc.gridx = 0;
+        gc.gridy = row++;
+        gc.gridwidth = 2;
+        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
+        btnPanel.setOpaque(false);
+
         JButton submitButton = new JButton("Create Staff");
-        submitButton.setFont(new Font("SansSerif", Font.BOLD, 18));
-        submitButton.setBackground(new Color(100, 149, 237));
-        submitButton.setForeground(Color.WHITE);
-        submitButton.setFocusPainted(false);
-        submitButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        submitButton.setPreferredSize(new Dimension(200, 40));
+        styleFlatButton(submitButton, PRIMARY);
 
+        btnPanel.add(submitButton);
+        card.add(btnPanel, gc);
+
+        // Status label
+        gc.gridy = row++;
+        statusLbl.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        card.add(statusLbl, gc);
+
+        // Submit button action
         submitButton.addActionListener((ActionEvent e) -> {
             String name = nameField.getText();
             String email = emailField.getText();
@@ -121,13 +166,13 @@ public class CreateStaffForm extends JPanel {
             try {
                 dob = LocalDate.of(year, month, day);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Invalid date selected.", "Error", JOptionPane.ERROR_MESSAGE);
+                setStatus("Invalid date selected.", true);
                 return;
             }
 
             String branchItem = (String) branchDropdown.getSelectedItem();
             if (branchItem == null || branchItem.equals("Select Branch")) {
-                JOptionPane.showMessageDialog(this, "Please select a branch.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                setStatus("Please select a branch.", true);
                 return;
             }
 
@@ -135,16 +180,34 @@ public class CreateStaffForm extends JPanel {
 
             try {
                 if (staffController.handleCreateStaff(name, email, phone, cnic, dob, branchId)) {
-                    JOptionPane.showMessageDialog(this, "Staff created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    setStatus("Staff created successfully!", false);
+                    clearForm();
                 } else {
-                    JOptionPane.showMessageDialog(this, "All fields are required.", "Error", JOptionPane.ERROR_MESSAGE);
+                    setStatus("All fields are required.", true);
                 }
             } catch (RuntimeException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                setStatus(ex.getMessage(), true);
             }
         });
 
-        add(submitButton, gbc);
+        // Add card to main panel
+        add(card);
+    }
+
+    private void clearForm() {
+        nameField.setText("");
+        emailField.setText("");
+        phoneField.setText("");
+        cnicField.setText("");
+        // Reset dropdowns to first item
+        dayDropdown.setSelectedIndex(0);
+        monthDropdown.setSelectedIndex(0);
+        yearDropdown.setSelectedIndex(0);
+    }
+
+    private void setStatus(String message, boolean isError) {
+        statusLbl.setText(message);
+        statusLbl.setForeground(isError ? ERROR_COLOR : ACCENT.darker());
     }
 
     private void loadBranchIds() {
@@ -155,19 +218,87 @@ public class CreateStaffForm extends JPanel {
             }
         } catch (RuntimeException ex) {
             System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "Failed to load branch IDs.", "Error", JOptionPane.ERROR_MESSAGE);
+            setStatus("Failed to load branch IDs.", true);
         }
     }
 
-    private void addLabeledField(String label, JTextField field, GridBagConstraints gbc, Font labelFont, Font fieldFont) {
-        JLabel jLabel = new JLabel(label);
-        jLabel.setFont(labelFont);
-        gbc.gridx = 0;
-        add(jLabel, gbc);
+    private void addLabeledField(JPanel parent, GridBagConstraints gc, int row, String label, JTextField field, String tooltip) {
+        gc.gridx = 0;
+        gc.gridy = row;
+        gc.gridwidth = 1;
 
-        field.setFont(fieldFont);
-        gbc.gridx = 1;
-        add(field, gbc);
-        gbc.gridy++;
+        JLabel jLabel = new JLabel(label);
+        jLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        jLabel.setForeground(TEXT_SECONDARY);
+        parent.add(jLabel, gc);
+
+        gc.gridx = 1;
+        styleTextField(field);
+        field.setToolTipText(tooltip);
+        parent.add(field, gc);
+    }
+
+    private void styleTextField(JTextField field) {
+        field.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        field.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, TEXT_SECONDARY));
+        field.setPreferredSize(new Dimension(250, 30));
+    }
+
+    private void styleComboBox(JComboBox<?> comboBox) {
+        comboBox.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        comboBox.setBackground(CARD_BG);
+        comboBox.setForeground(TEXT_PRIMARY);
+        ((JComponent) comboBox.getRenderer()).setBorder(new EmptyBorder(2, 5, 2, 5));
+    }
+
+    private void styleFlatButton(JButton btn, Color color) {
+        btn.setBackground(color);
+        btn.setForeground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setBorder(BorderFactory.createEmptyBorder(8, 18, 8, 18));
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setContentAreaFilled(true);
+        btn.setOpaque(true);
+
+        btn.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                btn.setBackground(color.darker());
+            }
+
+            public void mouseExited(MouseEvent e) {
+                btn.setBackground(color);
+            }
+        });
+    }
+
+    // Copy of RoundedShadowPanel from StaffProfileSettings
+    private static class RoundedShadowPanel extends JPanel {
+        private final int cornerRadius;
+
+        RoundedShadowPanel(int radius) {
+            super();
+            this.cornerRadius = radius;
+            setOpaque(false);
+            setLayout(new GridBagLayout());
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            int shadowGap = 6;
+            int shadowOffset = 4;
+
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            g2.setColor(new Color(0, 0, 0, 30));
+            g2.fillRoundRect(shadowOffset, shadowOffset, getWidth() - shadowGap, getHeight() - shadowGap, cornerRadius, cornerRadius);
+
+            g2.setColor(getBackground());
+            g2.fillRoundRect(0, 0, getWidth() - shadowGap - shadowOffset, getHeight() - shadowGap - shadowOffset, cornerRadius, cornerRadius);
+
+            g2.dispose();
+            super.paintComponent(g);
+        }
     }
 }

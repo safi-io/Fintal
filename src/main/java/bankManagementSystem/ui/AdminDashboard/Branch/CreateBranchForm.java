@@ -3,98 +3,163 @@ package main.java.bankManagementSystem.ui.AdminDashboard.Branch;
 import main.java.bankManagementSystem.controller.AdminDashboard.BranchController;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 public class CreateBranchForm extends JPanel {
 
-    private final JTextField branchNameField;
-    private final JTextField branchAddressField;
-    private final JTextField branchPhoneField;
-    private final BranchController branchController;
+    private final JTextField nameField = new JTextField(20);
+    private final JTextField addressField = new JTextField(20);
+    private final JTextField phoneField = new JTextField(20);
+    private final JLabel statusLbl = new JLabel(" ");
+
+    private final BranchController controller = new BranchController();
+
+    /* --- Color & font constants --- */
+    private static final Color BG_COLOR       = new Color(245, 248, 250);
+    private static final Color CARD_BG        = Color.WHITE;
+    private static final Color PRIMARY        = new Color(48, 120, 245);
+    private static final Color PRIMARY_HOVER  = new Color(40, 100, 210);
+    private static final Color TEXT_PRIMARY   = new Color(33, 33, 33);
+    private static final Color TEXT_SECONDARY = new Color(120, 120, 120);
+    private static final Color ACCENT         = new Color(48, 209, 88);
+    private static final Color ERROR_COLOR    = new Color(255, 69, 58);
 
     public CreateBranchForm() {
-        branchController = new BranchController();
         setLayout(new GridBagLayout());
-        setBackground(Color.WHITE);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 20, 10, 20);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        setBackground(BG_COLOR);
 
-        Font labelFont = new Font("SansSerif", Font.BOLD, 16);
-        Font fieldFont = new Font("SansSerif", Font.PLAIN, 16);
+        RoundedShadowPanel card = new RoundedShadowPanel(20);
+        card.setLayout(new GridBagLayout());
+        card.setBorder(new EmptyBorder(40, 50, 50, 50));
+        card.setBackground(CARD_BG);
 
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.insets = new Insets(15, 20, 15, 20);
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.weightx = 1;
+        gc.anchor = GridBagConstraints.WEST;
+
+        int row = 0;
+
+        /* --- Heading --- */
+        gc.gridx = 0; gc.gridy = row++; gc.gridwidth = 2;
         JLabel heading = new JLabel("Create New Branch");
-        heading.setFont(new Font("SansSerif", Font.BOLD, 26));
-        heading.setHorizontalAlignment(SwingConstants.CENTER);
-        gbc.gridwidth = 2;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(heading, gbc);
+        heading.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        heading.setForeground(TEXT_PRIMARY);
+        card.add(heading, gc);
+        gc.gridwidth = 1;
 
-        gbc.gridwidth = 1;
-        gbc.gridy++;
+        /* --- Fields --- */
+        styleField(nameField);
+        styleField(addressField);
+        styleField(phoneField);
 
-        JLabel nameLabel = new JLabel("Branch Name:");
-        nameLabel.setFont(labelFont);
-        gbc.gridx = 0;
-        add(nameLabel, gbc);
+        addLabeledField(card, gc, row++, "Branch Name", nameField, "Enter branch name");
+        addLabeledField(card, gc, row++, "Branch Address", addressField, "Enter branch address");
+        addLabeledField(card, gc, row++, "Branch Phone", phoneField, "Enter branch phone number");
 
-        branchNameField = new JTextField(20);
-        branchNameField.setFont(fieldFont);
-        gbc.gridx = 1;
-        add(branchNameField, gbc);
+        /* --- Submit button --- */
+        gc.gridx = 0; gc.gridy = row++; gc.gridwidth = 2;
+        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        btnPanel.setOpaque(false);
 
-        gbc.gridy++;
-        JLabel addressLabel = new JLabel("Branch Address:");
-        addressLabel.setFont(labelFont);
-        gbc.gridx = 0;
-        add(addressLabel, gbc);
+        JButton submitBtn = new JButton("Create Branch");
+        styleFlatButton(submitBtn, PRIMARY, PRIMARY_HOVER);
+        btnPanel.add(submitBtn);
 
-        branchAddressField = new JTextField(20);
-        branchAddressField.setFont(fieldFont);
-        gbc.gridx = 1;
-        add(branchAddressField, gbc);
+        card.add(btnPanel, gc);
 
-        gbc.gridy++;
-        JLabel phoneLabel = new JLabel("Branch Phone:");
-        phoneLabel.setFont(labelFont);
-        gbc.gridx = 0;
-        add(phoneLabel, gbc);
+        /* --- Status Label --- */
+        gc.gridy = row;
+        statusLbl.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        card.add(statusLbl, gc);
 
-        branchPhoneField = new JTextField(20);
-        branchPhoneField.setFont(fieldFont);
-        gbc.gridx = 1;
-        add(branchPhoneField, gbc);
+        add(card);
 
-        gbc.gridy++;
-        gbc.gridwidth = 2;
-        gbc.gridx = 0;
-        JButton submitButton = new JButton("Create Branch");
-        submitButton.setFont(new Font("SansSerif", Font.BOLD, 18));
-        submitButton.setBackground(new Color(100, 149, 237));
-        submitButton.setForeground(Color.WHITE);
-        submitButton.setFocusPainted(false);
-        submitButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        submitButton.setPreferredSize(new Dimension(200, 40));
+        /* --- Submit action --- */
+        submitBtn.addActionListener(e -> handleSubmit());
+    }
 
-        submitButton.addActionListener((ActionEvent e) -> {
-            String branchName = branchNameField.getText();
-            String branchAddress = branchAddressField.getText();
-            String branchPhone = branchPhoneField.getText();
+    /* === Logic === */
+    private void handleSubmit() {
+        String name = nameField.getText().trim();
+        String addr = addressField.getText().trim();
+        String phone = phoneField.getText().trim();
 
-            try {
-                if (branchController.handleCreateBranch(branchName, branchAddress, branchPhone)) {
-                    JOptionPane.showMessageDialog(this, "Branch created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(this, "All Fields must not be null.", "Error", JOptionPane.ERROR_MESSAGE);
+        if (name.isEmpty() || addr.isEmpty() || phone.isEmpty()) {
+            setStatus("All fields are required.", true);
+            return;
+        }
 
-                }
-            } catch (RuntimeException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        try {
+            boolean created = controller.handleCreateBranch(name, addr, phone);
+            if (created) {
+                setStatus("Branch created successfully!", false);
+                nameField.setText(""); addressField.setText(""); phoneField.setText("");
+            } else {
+                setStatus("Failed to create branch.", true);
             }
-        });
+        } catch (RuntimeException ex) {
+            setStatus("Error: " + ex.getMessage(), true);
+        }
+    }
 
-        add(submitButton, gbc);
+    /* === Helpers === */
+    private void setStatus(String msg, boolean isError) {
+        statusLbl.setText(msg);
+        statusLbl.setForeground(isError ? ERROR_COLOR : ACCENT.darker());
+    }
+
+    private void addLabeledField(JPanel parent, GridBagConstraints gc, int row,
+                                 String label, JTextField field, String tooltip) {
+        gc.gridx = 0; gc.gridy = row;
+        JLabel lbl = new JLabel(label);
+        lbl.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lbl.setForeground(TEXT_SECONDARY);
+        parent.add(lbl, gc);
+
+        gc.gridx = 1;
+        field.setToolTipText(tooltip);
+        parent.add(field, gc);
+    }
+
+    private void styleField(JTextField f) {
+        f.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        f.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(220,220,220)),
+                BorderFactory.createEmptyBorder(6, 8, 6, 8)
+        ));
+    }
+
+    private void styleFlatButton(JButton b, Color base, Color hover) {
+        b.setBackground(base);
+        b.setForeground(Color.WHITE);
+        b.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        b.setBorder(BorderFactory.createEmptyBorder(8, 18, 8, 18));
+        b.setFocusPainted(false);
+        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        b.setOpaque(true);
+        b.setContentAreaFilled(true);
+        b.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) { b.setBackground(hover); }
+            public void mouseExited(java.awt.event.MouseEvent e) { b.setBackground(base); }
+        });
+    }
+
+    /* === Rounded card with drop shadow === */
+    private static class RoundedShadowPanel extends JPanel {
+        private final int radius;
+        RoundedShadowPanel(int r) { this.radius = r; setOpaque(false); }
+        @Override protected void paintComponent(Graphics g) {
+            int shadowGap = 6, shadowOffset = 4;
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(new Color(0, 0, 0, 30));
+            g2.fillRoundRect(shadowOffset, shadowOffset, getWidth() - shadowGap, getHeight() - shadowGap, radius, radius);
+            g2.setColor(getBackground());
+            g2.fillRoundRect(0, 0, getWidth() - shadowGap - shadowOffset, getHeight() - shadowGap - shadowOffset, radius, radius);
+            g2.dispose(); super.paintComponent(g);
+        }
     }
 }
