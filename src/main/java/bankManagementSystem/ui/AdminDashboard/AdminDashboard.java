@@ -6,6 +6,11 @@ import main.java.bankManagementSystem.ui.AdminDashboard.Branch.UpdateBranchForm;
 import main.java.bankManagementSystem.ui.AdminDashboard.Staff.CreateStaffForm;
 import main.java.bankManagementSystem.ui.AdminDashboard.Staff.DeleteStaffForm;
 import main.java.bankManagementSystem.ui.AdminDashboard.Staff.UpdateStaffForm;
+import main.java.bankManagementSystem.ui.AdminDashboard.Transactions.ViewTransactionsPanel;
+
+/*
+TODO: TRANSACTIONS LOGS TO BE SHOWED ON ADMIN DASHBOARD
+ */
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,13 +40,13 @@ public class AdminDashboard extends JFrame {
         sidebar.setBackground(new Color(30, 30, 30));
         sidebar.setPreferredSize(new Dimension(250, getHeight()));
 
-        JPanel navButtonsPanel = new JPanel(new GridLayout(6, 1, 0, 10));
+        JPanel navButtonsPanel = new JPanel(new GridLayout(7, 1, 0, 10));
         navButtonsPanel.setBackground(new Color(30, 30, 30));
         navButtonsPanel.setBorder(BorderFactory.createEmptyBorder(30, 10, 10, 10));
 
         String[] options = {
                 "Create Staff", "Update Staff", "Delete Staff",
-                "Create Branch", "Update Branch", "Delete Branch"
+                "Create Branch", "Update Branch", "Delete Branch", "Transactions Log"
         };
 
         for (String option : options) {
@@ -145,10 +150,8 @@ public class AdminDashboard extends JFrame {
             case "Update Branch":
                 mainContentPanel.add(new UpdateBranchForm(), BorderLayout.CENTER);
                 break;
-            default:
-                JLabel label = new JLabel("Feature for '" + title + "' not implemented yet.", SwingConstants.CENTER);
-                label.setFont(new Font("SansSerif", Font.BOLD, 28));
-                mainContentPanel.add(label, BorderLayout.CENTER);
+            case "Transactions Log":
+                mainContentPanel.add(new ViewTransactionsPanel(), BorderLayout.CENTER);
         }
 
         mainContentPanel.revalidate();

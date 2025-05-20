@@ -1,8 +1,6 @@
 package main.java.bankManagementSystem.ui.StaffDashboard;
 
-import main.java.bankManagementSystem.controller.CustomerDashboard.CustomerController;
 import main.java.bankManagementSystem.controller.StaffDashboard.StaffController;
-import main.java.bankManagementSystem.ui.CustomerDashboard.Profile.ProfileSettings;
 import main.java.bankManagementSystem.ui.StaffDashboard.Accounts.AccountsApplication;
 import main.java.bankManagementSystem.ui.StaffDashboard.Accounts.AccountData;
 import main.java.bankManagementSystem.ui.StaffDashboard.Customer.CustomerData;
