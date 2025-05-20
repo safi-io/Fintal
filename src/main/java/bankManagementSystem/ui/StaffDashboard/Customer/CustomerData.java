@@ -6,159 +6,179 @@ import main.java.bankManagementSystem.model.CustomerModel;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
+import javax.swing.table.*;
 import java.awt.*;
 import java.text.MessageFormat;
 import java.util.List;
 
 public class CustomerData extends JPanel {
+
+    /* ───  Palette & Fonts shared with StaffDirectoryPanel  ─────────────────── */
+    private static final Color HEADER_BG = new Color(32, 136, 203);       // same blue
+    private static final Color STRIPE_BG = new Color(245, 250, 255);      // zebra odd rows
+    private static final Color SELECT_BG = new Color(184, 207, 229);      // selection
+    private static final Font  CELL_FONT = new Font("Segoe UI", Font.PLAIN, 14);
+    private static final Font  HEADER_FONT = new Font("Segoe UI", Font.BOLD, 15);
+
+    /* ───  UI state  ────────────────────────────────────────────────────────── */
     private final JTextField cnicField;
-    private final JTable customerTable;
-    private final DefaultTableModel tableModel;
-    private final TableRowSorter<DefaultTableModel> rowSorter;
-    private final CustomerController customerController;
     private final JTextField nameField;
+    private final JTable     table;
+    private final DefaultTableModel model;
+    private final TableRowSorter<DefaultTableModel> sorter;
+    private final CustomerController customerController;
 
     public CustomerData() {
+
+        /* ─ general panel ─ */
         customerController = new CustomerController();
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(10, 10));
         setBackground(Color.WHITE);
+        setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(HEADER_BG, 2),
+                "Customer Directory",
+                0, 0,
+                new Font("Segoe UI", Font.BOLD, 18),
+                HEADER_BG));
 
-        // --- Top Panel ---
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(Color.WHITE);
+        /* ─ top (search) bar ─ */
+        JPanel searchBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 6));
+        searchBar.setBackground(Color.WHITE);
 
-        JLabel heading = new JLabel("All Customers", SwingConstants.CENTER);
-        heading.setFont(new Font("SansSerif", Font.BOLD, 24));
-        heading.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
-        topPanel.add(heading, BorderLayout.NORTH);
+        searchBar.add(new JLabel("Filter by CNIC:"));
+        cnicField = new JTextField(16);
+        prettifyTextField(cnicField);
+        searchBar.add(cnicField);
 
-        JPanel searchPanel = new JPanel();
-        searchPanel.setBackground(Color.WHITE);
-        searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        searchBar.add(new JLabel("Filter by Name:"));
+        nameField = new JTextField(16);
+        prettifyTextField(nameField);
+        searchBar.add(nameField);
 
-        cnicField = new JTextField(20);
-        searchPanel.add(new JLabel("Filter by CNIC: "));
-        cnicField.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        searchPanel.add(cnicField);
+        add(searchBar, BorderLayout.NORTH);
 
-        nameField = new JTextField(20);
-        searchPanel.add(new JLabel("Filter by Name: "));
-        nameField.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        searchPanel.add(nameField); // Add name field
+        /* ─ table ─ */
+        String[] cols = {"CNIC", "Name", "Mail", "Phone", "DOB"};
+        model = new DefaultTableModel(cols, 0) {
+            @Override public boolean isCellEditable(int r, int c) { return false; }
+        };
 
-        topPanel.add(searchPanel, BorderLayout.SOUTH);
-        add(topPanel, BorderLayout.NORTH);
-
-        searchPanel.add(Box.createHorizontalStrut(20)); // Spacer
-
-        // --- Table Setup ---
-        String[] columnNames = {"CNIC", "Name", "Mail", "Phone", "DOB"};
-        tableModel = new DefaultTableModel(columnNames, 0) {
+        table = new JTable(model) {
             @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
+            public Component prepareRenderer(TableCellRenderer r, int row, int col) {
+                Component c = super.prepareRenderer(r, row, col);
+                if (!isRowSelected(row))
+                    c.setBackground(row % 2 == 0 ? Color.WHITE : STRIPE_BG);
+                else
+                    c.setBackground(SELECT_BG);
+                return c;
             }
         };
-        customerTable = new JTable(tableModel);
-        customerTable.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        customerTable.setRowHeight(22);
-        JScrollPane tableScrollPane = new JScrollPane(customerTable);
-        tableScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        add(tableScrollPane, BorderLayout.CENTER);
+        styliseTable(table);
 
-        // --- Bottom Panel with Print Button ---
-        JButton printButton = new JButton("Print Table");
-        printButton.setFont(new Font("SansSerif", Font.BOLD, 16));
-        printButton.setBackground(new Color(60, 179, 113));
-        printButton.setForeground(Color.WHITE);
-        printButton.setFocusPainted(false);
-        printButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.setBackground(Color.WHITE);
-        bottomPanel.add(printButton);
-        add(bottomPanel, BorderLayout.PAGE_END);
+        sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
 
-        // --- Table Row Sorter for Filtering ---
-        rowSorter = new TableRowSorter<>(tableModel);
-        customerTable.setRowSorter(rowSorter);
+        add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // --- Real-Time Filter Logic ---
-        cnicField.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {
-                filterTable();
-            }
+        /* ─ bottom pane (print) ─ */
+        JButton printBtn = new JButton("Print Table");
+        styleMainButton(printBtn);
+        printBtn.addActionListener(e -> printTable());
 
-            public void removeUpdate(DocumentEvent e) {
-                filterTable();
-            }
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        bottom.setBackground(Color.WHITE);
+        bottom.add(printBtn);
+        add(bottom, BorderLayout.SOUTH);
 
-            public void changedUpdate(DocumentEvent e) {
-                filterTable();
-            }
-        });
+        /* ─ listeners ─ */
+        DocumentListener dl = new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { filter(); }
+            public void removeUpdate(DocumentEvent e) { filter(); }
+            public void changedUpdate(DocumentEvent e) { filter(); }
+        };
+        cnicField.getDocument().addDocumentListener(dl);
+        nameField.getDocument().addDocumentListener(dl);
 
-        nameField.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { filterTable(); }
-            public void removeUpdate(DocumentEvent e) { filterTable(); }
-            public void changedUpdate(DocumentEvent e) { filterTable(); }
-        });
-
-        // --- Load Data ---
+        /* ─ data ─ */
         loadAllCustomers();
-
-        // --- Print Button Logic ---
-        printButton.addActionListener(e -> {
-            try {
-                boolean printed = customerTable.print(JTable.PrintMode.FIT_WIDTH,
-                        new MessageFormat("Customer Table"),
-                        new MessageFormat("Page - {0}"));
-                if (!printed) {
-                    JOptionPane.showMessageDialog(this, "Printing was cancelled.", "Print", JOptionPane.WARNING_MESSAGE);
-                }
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Failed to print: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
     }
+
+    /* ───────────────────────── helpers ───────────────────────── */
 
     private void loadAllCustomers() {
+        model.setRowCount(0);
         try {
-            List<CustomerModel> customers = customerController.handleGetAllCustomers();
-            for (CustomerModel customer : customers) {
-                tableModel.addRow(new Object[]{
-                        customer.getCustomerCNIC(),
-                        customer.getCustomerName(),
-                        customer.getCustomerMail(),
-                        customer.getCustomerPhone(),
-                        customer.getCustomerDOB(),
+            List<CustomerModel> list = customerController.handleGetAllCustomers();
+            for (CustomerModel c : list)
+                model.addRow(new Object[]{
+                        c.getCustomerCNIC(),
+                        c.getCustomerName(),
+                        c.getCustomerMail(),
+                        c.getCustomerPhone(),
+                        c.getCustomerDOB()
                 });
-            }
         } catch (RuntimeException ex) {
-            JOptionPane.showMessageDialog(this, "Failed to load customers: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Failed to load customers: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void filterTable() {
-        String cnicText = cnicField.getText().trim();
-        String nameText = nameField.getText().trim();
+    private void filter() {
+        String cnic = cnicField.getText().trim();
+        String name = nameField.getText().trim();
 
-        RowFilter<DefaultTableModel, Object> cnicFilter = cnicText.isEmpty()
-                ? null
-                : RowFilter.regexFilter("^" + cnicText, 0); // Column 0 = CNIC
+        RowFilter<DefaultTableModel, Object> cnicF = cnic.isEmpty() ? null
+                : RowFilter.regexFilter("^" + cnic, 0);
+        RowFilter<DefaultTableModel, Object> nameF = name.isEmpty() ? null
+                : RowFilter.regexFilter("(?i)" + name, 1);
 
-        RowFilter<DefaultTableModel, Object> nameFilter = nameText.isEmpty()
-                ? null
-                : RowFilter.regexFilter("(?i)" + nameText, 1); // Column 1 = Name (case-insensitive)
-
-        if (cnicFilter == null && nameFilter == null) {
-            rowSorter.setRowFilter(null);
-        } else if (cnicFilter != null && nameFilter != null) {
-            rowSorter.setRowFilter(RowFilter.andFilter(List.of(cnicFilter, nameFilter)));
+        if (cnicF == null && nameF == null) {
+            sorter.setRowFilter(null);
+        } else if (cnicF != null && nameF != null) {
+            sorter.setRowFilter(RowFilter.andFilter(List.of(cnicF, nameF)));
         } else {
-            rowSorter.setRowFilter(cnicFilter != null ? cnicFilter : nameFilter);
+            sorter.setRowFilter(cnicF != null ? cnicF : nameF);
         }
     }
 
+    private void printTable() {
+        try {
+            boolean done = table.print(JTable.PrintMode.FIT_WIDTH,
+                    new MessageFormat("Customer Table"),
+                    new MessageFormat("Page - {0}"));
+            if (!done)
+                JOptionPane.showMessageDialog(this, "Printing cancelled.",
+                        "Print", JOptionPane.WARNING_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Print failed: " + ex.getMessage(),
+                    "Print", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /* ─ visual utils (identical to StaffDirectoryPanel) ─ */
+
+    private static void styliseTable(JTable t) {
+        t.setRowHeight(28);
+        t.setFont(CELL_FONT);
+        JTableHeader h = t.getTableHeader();
+        h.setFont(HEADER_FONT);
+        h.setBackground(HEADER_BG);
+        h.setForeground(Color.WHITE);
+        t.setGridColor(new Color(220, 220, 220));
+    }
+
+    private static void prettifyTextField(JTextField f) {
+        f.setFont(CELL_FONT);
+        f.setPreferredSize(new Dimension(170, 28));
+    }
+
+    private static void styleMainButton(AbstractButton b) {
+        b.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        b.setBackground(HEADER_BG);
+        b.setForeground(Color.WHITE);
+        b.setFocusPainted(false);
+        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        b.setPreferredSize(new Dimension(150, 38));
+    }
 }

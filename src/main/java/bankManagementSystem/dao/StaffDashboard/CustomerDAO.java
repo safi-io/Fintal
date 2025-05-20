@@ -111,6 +111,7 @@ public class CustomerDAO {
 
         return requiredCustomer;
     }
+
     public boolean updateCustomerByAccountNumber(String accountNumber, String name, String email, String phone, String password) {
         StringBuilder query = new StringBuilder("UPDATE customer SET ");
         List<String> fields = new ArrayList<>();

@@ -67,6 +67,7 @@ public class StaffDAO {
         }
     }
 
+    // By Model
     public boolean updateStaff(StaffModel updateStaff) {
         String query = "UPDATE STAFF SET STAFF_NAME = ?, STAFF_MAIL = ?, STAFF_PHONE = ?, STAFF_CNIC = ?, STAFF_DOB = ?, STAFF_BRANCH_ID = ? WHERE STAFF_ID = ?";
 
@@ -88,6 +89,71 @@ public class StaffDAO {
         }
 
 
+    }
+
+    // By ID
+    public boolean updateStaffById(String staffId, String staffName, String staffMail, String staffPhone, String staffPassword) {
+        StringBuilder query = new StringBuilder("UPDATE staff SET ");
+        List<String> fields = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
+
+        // Conditionally add fields
+        if (staffName != null && !staffName.isEmpty()) {
+            fields.add("staff_Name = ?");
+            values.add(staffName);
+        }
+        if (staffMail != null && !staffMail.isEmpty()) {
+            fields.add("staff_Mail = ?");
+            values.add(staffMail);
+        }
+        if (staffPhone != null && !staffPhone.isEmpty()) {
+            fields.add("staff_Phone = ?");
+            values.add(staffPhone);
+        }
+        if (staffPassword != null && !staffPassword.isEmpty()) {
+            fields.add("staff_Password = ?");
+            values.add(staffPassword);
+        }
+
+        // Nothing to update
+        if (fields.isEmpty()) return false;
+
+        // Build final query
+        query.append(String.join(", ", fields));
+        query.append(" WHERE staff_Id = ?");
+
+        values.add(staffId); // Add staffId as last parameter
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+
+            for (int i = 0; i < values.size(); i++) {
+                stmt.setObject(i + 1, values.get(i));
+            }
+
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<StaffModel> getStaffDataOtherThanId(int staffId) {
+        List<StaffModel> staffList = new ArrayList<>();
+        String query = "SELECT * FROM STAFF WHERE staff_id <> ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, staffId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                StaffModel sm = new StaffModel(rs.getInt("staff_id"), rs.getString("staff_name"), rs.getString("staff_mail"), rs.getString("staff_phone"), rs.getInt("staff_branch_id"));
+                staffList.add(sm);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return staffList;
     }
 
     public List<String> getStaffIdNameList() {
@@ -145,10 +211,7 @@ public class StaffDAO {
 
     public String getPasswordByMail(String staffMail) {
         String query = "SELECT STAFF_PASSWORD FROM STAFF WHERE STAFF_MAIL = ?";
-        try (
-                Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                PreparedStatement stmt = connection.prepareStatement(query)
-        ) {
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, staffMail);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {

@@ -34,6 +34,17 @@ public class StaffModel {
         this.staffBranchId = staffBranchId;
     }
 
+    // For Display Staff
+
+
+    public StaffModel(int staffId, String staffName, String staffMail, String staffPhone, int staffBranchId) {
+        this.staffId = staffId;
+        this.staffName = staffName;
+        this.staffMail = staffMail;
+        this.staffPhone = staffPhone;
+        this.staffBranchId = staffBranchId;
+    }
+
     public int getStaffId() {
         return staffId;
     }

@@ -1,8 +1,13 @@
 package main.java.bankManagementSystem.ui.StaffDashboard;
 
+import main.java.bankManagementSystem.controller.CustomerDashboard.CustomerController;
+import main.java.bankManagementSystem.controller.StaffDashboard.StaffController;
+import main.java.bankManagementSystem.ui.CustomerDashboard.Profile.ProfileSettings;
 import main.java.bankManagementSystem.ui.StaffDashboard.Accounts.AccountsApplication;
 import main.java.bankManagementSystem.ui.StaffDashboard.Accounts.AccountData;
 import main.java.bankManagementSystem.ui.StaffDashboard.Customer.CustomerData;
+import main.java.bankManagementSystem.ui.StaffDashboard.Profile.StaffProfileSettings;
+import main.java.bankManagementSystem.ui.StaffDashboard.Staff.StaffDirectoryPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,8 +19,11 @@ public class StaffDashboard extends JFrame {
     private final JPanel mainContentPanel;
     private JButton currentlySelectedButton;
 
+    private final StaffController staffController;
+
     public StaffDashboard() {
         setTitle("Staff Dashboard");
+        staffController = new StaffController();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(false);
@@ -139,12 +147,18 @@ public class StaffDashboard extends JFrame {
                 mainContentPanel.repaint();
                 break;
             case "Loans":
+                break;
             case "Transaction Logs":
+                break;
             case "Staff Directory":
+                mainContentPanel.removeAll();
+                mainContentPanel.add(new StaffDirectoryPanel(), BorderLayout.CENTER);
+                mainContentPanel.revalidate();
+                mainContentPanel.repaint();
+                break;
             case "Edit Profile":
-                JLabel label = new JLabel(title + " Panel (Under Development)", SwingConstants.CENTER);
-                label.setFont(new Font("SansSerif", Font.BOLD, 28));
-                mainContentPanel.add(label, BorderLayout.CENTER);
+                StaffProfileSettings profileSettings = getProfileSettings();
+                mainContentPanel.add(profileSettings, BorderLayout.CENTER);
                 break;
 
             default:
@@ -166,6 +180,29 @@ public class StaffDashboard extends JFrame {
 
         selectedButton.setBackground(new Color(100, 149, 237)); // Cornflower Blue
         currentlySelectedButton = selectedButton;
+    }
+
+    private StaffProfileSettings getProfileSettings() {
+        StaffProfileSettings profileSettings = new StaffProfileSettings(6);
+
+        // Add listener here
+        profileSettings.addUpdateListener(() -> {
+            String name = profileSettings.getNameText();
+            String email = profileSettings.getEmailText();
+            String phone = profileSettings.getPhoneText();
+            String password = profileSettings.getPasswordText();
+
+            // Call the controller method to update data (you'll need to implement this)
+            boolean success = staffController.handleUpdateStaffData("6", name, email, phone, password);
+
+            if (success) {
+                profileSettings.setStatus("Profile updated successfully", false);
+                profileSettings.clearPassword();
+            } else {
+                profileSettings.setStatus("Update failed", true);
+            }
+        });
+        return profileSettings;
     }
 
     public static void main(String[] args) {

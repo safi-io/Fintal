@@ -143,7 +143,6 @@ public class CustomerDashboard extends JFrame {
                 break;
             case "Profile Settings":
                 ProfileSettings profileSettings = getProfileSettings();
-                // ⬇️  put it in the content panel, not in the frame
                 mainContentPanel.add(profileSettings, BorderLayout.CENTER);
                 break;
         }
