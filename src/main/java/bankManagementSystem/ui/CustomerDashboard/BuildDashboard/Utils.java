@@ -8,12 +8,12 @@ public class Utils {
     // Utils Classes for Building Customer Dashboard
     public static class CounterLabel extends JLabel {
         public CounterLabel(double start, double end, int ms) {
-            super("PKR0.00");
-            DecimalFormat fmt = new DecimalFormat("PKR #,##0.00");
+            super("<html><small>PKR</small> 0.00</html>");
+            DecimalFormat fmt = new DecimalFormat("#,##0.00");
             int frames = Math.max(1, ms / 30);
             double step = (end - start) / frames;
 
-            final double[] current = {start};  // mutable container for the current value
+            final double[] current = {start};
 
             Timer t = new Timer(30, null);
             t.addActionListener(e -> {
@@ -22,12 +22,13 @@ public class Utils {
                     current[0] = end;
                     t.stop();
                 }
-                setText(fmt.format(current[0]));
+                setText("<html><small>PKR</small> " + fmt.format(current[0]) + "</html>");
             });
             t.setInitialDelay(200);
             t.start();
         }
     }
+
 
     public static class AlphaFadeLabel extends JLabel {
         private float alpha = 0;

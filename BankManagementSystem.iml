@@ -9,5 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="mysql-connector-j-9.3.0" level="project" />
     <orderEntry type="library" name="jbcrypt-0.4" level="project" />
+    <orderEntry type="library" name="opencsv-5.11" level="project" />
+    <orderEntry type="library" name="commons-lang3-3.12.0" level="project" />
   </component>
 </module>

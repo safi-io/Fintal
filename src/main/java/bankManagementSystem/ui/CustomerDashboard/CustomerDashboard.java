@@ -14,6 +14,14 @@ import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/*
+TODO: HAVE TO DEVELOP BENEFICARY DASHBOARD
+        HASHING PASSWORDS
+        LOGIN AND SIGN UP PAGE
+        MAIL NOTIFICATIONS
+        STRIPE INTEGERATION
+ */
+
 public class CustomerDashboard extends JFrame {
 
     private final JPanel mainContentPanel;
