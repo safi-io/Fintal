@@ -18,7 +18,7 @@ public class LoanApplicationModel {
 
     // For Showing History in Customer Dashboard
 
-    public LoanApplicationModel(int loanID, BigDecimal loanAmount, int loanTenure, String loanPurpose, LocalDate loanDate, boolean loanIsApproved) {
+    public LoanApplicationModel(int loanID, BigDecimal loanAmount, int loanTenure, String loanPurpose,LocalDate loanDate, boolean loanIsApproved) {
         this.loanID = loanID;
         this.loanAmount = loanAmount;
         this.loanTenure = loanTenure;
@@ -26,6 +26,20 @@ public class LoanApplicationModel {
         this.loanDate = loanDate;
         this.loanIsApproved = loanIsApproved;
     }
+
+    // For Getting All Applications
+
+    public LoanApplicationModel(int loanID, BigDecimal loanAmount, int loanTenure, String loanPurpose, String loanNote, LocalDate loanDate, String loanAccountNumber) {
+        this.loanID = loanID;
+        this.loanAmount = loanAmount;
+        this.loanTenure = loanTenure;
+        this.loanPurpose = loanPurpose;
+        this.loanNote = loanNote;
+        this.loanDate = loanDate;
+        this.loanAccountNumber = loanAccountNumber;
+    }
+
+
 
     public int getLoanID() {
         return loanID;

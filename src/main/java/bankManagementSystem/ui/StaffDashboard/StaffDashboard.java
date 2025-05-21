@@ -4,6 +4,7 @@ import main.java.bankManagementSystem.controller.StaffDashboard.StaffController;
 import main.java.bankManagementSystem.ui.StaffDashboard.Accounts.AccountsApplication;
 import main.java.bankManagementSystem.ui.StaffDashboard.Accounts.AccountData;
 import main.java.bankManagementSystem.ui.StaffDashboard.Customer.CustomerData;
+import main.java.bankManagementSystem.ui.StaffDashboard.Loan.LoanApplication;
 import main.java.bankManagementSystem.ui.StaffDashboard.Profile.StaffProfileSettings;
 import main.java.bankManagementSystem.ui.StaffDashboard.Staff.StaffDirectoryPanel;
 
@@ -38,7 +39,7 @@ public class StaffDashboard extends JFrame {
         navButtonsPanel.setBackground(new Color(40, 40, 60));
         navButtonsPanel.setBorder(BorderFactory.createEmptyBorder(30, 10, 10, 10));
 
-        String[] options = {"Account Applications", "Customers Data", "Accounts Data", "Loans", "Staff Directory", "Edit Profile"};
+        String[] options = {"Account Applications", "Loan Applications", "Customers Data", "Accounts Data", "Staff Directory", "Edit Profile"};
 
         for (String option : options) {
             JButton btn = new JButton(option);
@@ -144,7 +145,11 @@ public class StaffDashboard extends JFrame {
                 mainContentPanel.revalidate();
                 mainContentPanel.repaint();
                 break;
-            case "Loans":
+            case "Loan Applications":
+                mainContentPanel.removeAll();
+                mainContentPanel.add(new LoanApplication(), BorderLayout.CENTER);
+                mainContentPanel.revalidate();
+                mainContentPanel.repaint();
                 break;
             case "Staff Directory":
                 mainContentPanel.removeAll();
