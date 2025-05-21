@@ -1,6 +1,7 @@
 package main.java.bankManagementSystem.ui.CustomerDashboard.BuildDashboard;
 
 import main.java.bankManagementSystem.controller.CustomerDashboard.AccountController;
+import main.java.bankManagementSystem.controller.CustomerDashboard.LoanController;
 import main.java.bankManagementSystem.model.CustomerAccountBranchModel;
 
 import javax.swing.*;
@@ -14,6 +15,8 @@ public class MainDashboard {
     public static JPanel buildDashboard() {
 
         AccountController accountController = new AccountController();
+        LoanController loanController = new LoanController();
+
         CustomerAccountBranchModel data = accountController.handleGetDashboardData("20");
 
         JPanel p = new JPanel(new GridBagLayout());
@@ -26,20 +29,45 @@ public class MainDashboard {
         g.weightx = g.weighty = 1;
 
         JPanel[] cards = {
-                /* 0 */ statCard(new Utils.CounterLabel(0, data.getAccountCurrentBalance().doubleValue(), 2500),
-                "Total Balance", 48, new Color(0, 150, 90)),
-                /* 1 */ statCard(new Utils.AlphaFadeLabel(data.getAccountNumber(), 1000),
-                "Account Number", 36, new Color(30, 30, 30)),
-                /* 2 */ statCard(new Utils.AlphaFadeLabel(data.getCustomerName().toUpperCase(), 1000),
-                "Customer Name", 28, new Color(50, 50, 50)),
-                /* 3 */ statCard(new Utils.AlphaFadeLabel(data.getAccountLastLogin().toString(), 1000),
-                "Last Login", 28, new Color(50, 50, 50)),
-                /* 4 */ statCard(new Utils.AlphaFadeLabel(data.getCustomerBranch().toUpperCase(), 1000),
-                "Branch Name", 28, new Color(50, 50, 50)),
-                /* 5 */ statCard(new Utils.AlphaFadeLabel(data.getAccountType().toUpperCase(), 1000),
-                "Account Type", 28, new Color(50, 50, 50)),
-                /* 6 */ statCard(new Utils.AlphaFadeLabel(data.getAccountOpeningDate().toString(), 1000),
-                "Account Opening Date", 28, new Color(50, 50, 50))
+                // 💰 Total Balance
+                statCard(new Utils.CounterLabel(0, data.getAccountCurrentBalance().doubleValue(), 2500),
+                        "Total Balance", 48, new Color(0, 150, 90)),
+
+                // 💳 Account Number
+                statCard(new Utils.AlphaFadeLabel(data.getAccountNumber(), 1000),
+                        "Account Number", 36, new Color(30, 30, 30)),
+
+                // 🧍 Customer Name
+                statCard(new Utils.AlphaFadeLabel(data.getCustomerName().toUpperCase(), 1000),
+                        "Customer Name", 28, new Color(50, 50, 50)),
+
+                // 📅 Last Login
+                statCard(new Utils.AlphaFadeLabel(data.getAccountLastLogin().toString(), 1000),
+                        "Last Login", 28, new Color(50, 50, 50)),
+
+                // 🏦 Branch
+                statCard(new Utils.AlphaFadeLabel(data.getCustomerBranch().toUpperCase(), 1000),
+                        "Branch Name", 28, new Color(50, 50, 50)),
+
+                // 📘 Account Type
+                statCard(new Utils.AlphaFadeLabel(data.getAccountType().toUpperCase(), 1000),
+                        "Account Type", 28, new Color(50, 50, 50)),
+
+                // 🗓️ Opening Date
+                statCard(new Utils.AlphaFadeLabel(data.getAccountOpeningDate().toString(), 1000),
+                        "Account Opening Date", 28, new Color(50, 50, 50)),
+
+                // 🔴 Outstanding Loan (Added Card)
+                statCard(
+                        new Utils.CounterLabel(
+                                0,
+                                -Math.abs(loanController.handleGetOutstandingLoanBalance(data.getAccountNumber()).doubleValue()), // Ensures negative
+                                2500
+                        ),
+                        "Outstanding Loan",
+                        40,
+                        new Color(180, 0, 0) // Red
+                )
         };
 
         int row = 0, col = 0;
@@ -47,7 +75,10 @@ public class MainDashboard {
             g.gridy = row;
             g.gridx = col;
             p.add(c, g);
-            if (++col == 3) { col = 0; row++; }
+            if (++col == 3) {
+                col = 0;
+                row++;
+            }
         }
         return p;
     }
