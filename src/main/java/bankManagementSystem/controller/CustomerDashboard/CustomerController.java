@@ -2,6 +2,7 @@ package main.java.bankManagementSystem.controller.CustomerDashboard;
 
 import main.java.bankManagementSystem.dao.StaffDashboard.CustomerDAO;
 import main.java.bankManagementSystem.model.CustomerModel;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class CustomerController {
     private final CustomerDAO customerDAO;
@@ -15,7 +16,14 @@ public class CustomerController {
     }
 
     public boolean handleUpdateCustomerData(String accountNumber, String customerName, String customerMail, String customerPhone, String customerPassword) {
-        return customerDAO.updateCustomerByAccountNumber(accountNumber, customerName, customerMail, customerPhone, customerPassword);
+
+        if (!customerPassword.isEmpty()) {
+            String hashedPassword = BCrypt.hashpw(customerPassword, BCrypt.gensalt());
+            return customerDAO.updateCustomerByAccountNumber(accountNumber, customerName, customerMail, customerPhone, hashedPassword);
+        } else {
+            return customerDAO.updateCustomerByAccountNumber(accountNumber, customerName, customerMail, customerPhone, customerPassword);
+        }
+
     }
 
     public String handlegetAccountNumberByMail(String mail) {
