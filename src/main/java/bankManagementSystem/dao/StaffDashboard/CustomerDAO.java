@@ -57,25 +57,16 @@ public class CustomerDAO {
     }
 
     public CustomerModel handleGetCustomerByAccountNumber(String accountNumber) {
-        String query = "SELECT * FROM customer c " +
-                "JOIN account a ON c.customer_cnic = a.account_customer_cnic " +
-                "WHERE a.account_number = ?";
+        String query = "SELECT * FROM customer c " + "JOIN account a ON c.customer_cnic = a.account_customer_cnic " + "WHERE a.account_number = ?";
         CustomerModel requiredCustomer = null;
 
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, accountNumber);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                requiredCustomer = new CustomerModel(
-                        rs.getString("customer_CNIC"),
-                        rs.getString("customer_Name"),
-                        rs.getString("customer_Mail"),
-                        rs.getString("customer_Phone"),
-                        rs.getDate("customer_DOB").toLocalDate()
-                );
+                requiredCustomer = new CustomerModel(rs.getString("customer_CNIC"), rs.getString("customer_Name"), rs.getString("customer_Mail"), rs.getString("customer_Phone"), rs.getDate("customer_DOB").toLocalDate());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -89,20 +80,13 @@ public class CustomerDAO {
         String query = "SELECT * FROM CUSTOMER WHERE CUSTOMER_CNIC = ?";
         CustomerModel requiredCustomer = null;
 
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, CNIC);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                requiredCustomer = new CustomerModel(
-                        rs.getString("customer_CNIC"),
-                        rs.getString("customer_Name"),
-                        rs.getString("customer_Mail"),
-                        rs.getString("customer_Phone"),
-                        rs.getDate("customer_DOB").toLocalDate()
-                );
+                requiredCustomer = new CustomerModel(rs.getString("customer_CNIC"), rs.getString("customer_Name"), rs.getString("customer_Mail"), rs.getString("customer_Phone"), rs.getDate("customer_DOB").toLocalDate());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -142,8 +126,7 @@ public class CustomerDAO {
 
         values.add(accountNumber); // add at the end
 
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = conn.prepareStatement(query.toString())) {
 
             for (int i = 0; i < values.size(); i++) {
                 stmt.setObject(i + 1, values.get(i));
@@ -156,5 +139,42 @@ public class CustomerDAO {
         }
     }
 
+    public String getAccountNumberByMail(String customerMail) {
+        final String sql = "SELECT a.ACCOUNT_NUMBER " + "FROM CUSTOMER  c " + "JOIN ACCOUNT   a ON c.CUSTOMER_CNIC = a.ACCOUNT_CUSTOMER_CNIC " + "WHERE c.CUSTOMER_MAIL = ? ";
 
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, customerMail);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("ACCOUNT_NUMBER");
+                }
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error while fetching account number", e);
+        }
+    }
+
+    public String getAccountTypeByAccountNumber(String accountNumber) {
+
+        String sql = """
+                                SELECT ACCOUNT_TYPE FROM ACCOUNT WHERE ACCOUNT_NUMBER = ?
+                """;
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, accountNumber);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("ACCOUNT_TYPE");
+                }
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error while fetching account type", e);
+        }
+    }
 }

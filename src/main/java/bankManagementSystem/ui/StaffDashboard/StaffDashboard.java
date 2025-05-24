@@ -19,8 +19,10 @@ public class StaffDashboard extends JFrame {
     private JButton currentlySelectedButton;
 
     private final StaffController staffController;
+    private final int staffId;
 
-    public StaffDashboard() {
+    public StaffDashboard(int staffId) {
+        this.staffId = staffId;
         setTitle("Staff Dashboard");
         staffController = new StaffController();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -153,7 +155,7 @@ public class StaffDashboard extends JFrame {
                 break;
             case "Staff Directory":
                 mainContentPanel.removeAll();
-                mainContentPanel.add(new StaffDirectoryPanel(), BorderLayout.CENTER);
+                mainContentPanel.add(new StaffDirectoryPanel(staffId), BorderLayout.CENTER);
                 mainContentPanel.revalidate();
                 mainContentPanel.repaint();
                 break;
@@ -184,7 +186,7 @@ public class StaffDashboard extends JFrame {
     }
 
     private StaffProfileSettings getProfileSettings() {
-        StaffProfileSettings profileSettings = new StaffProfileSettings(6);
+        StaffProfileSettings profileSettings = new StaffProfileSettings(staffId);
 
         // Add listener here
         profileSettings.addUpdateListener(() -> {
@@ -194,7 +196,7 @@ public class StaffDashboard extends JFrame {
             String password = profileSettings.getPasswordText();
 
             // Call the controller method to update data (you'll need to implement this)
-            boolean success = staffController.handleUpdateStaffData("6", name, email, phone, password);
+            boolean success = staffController.handleUpdateStaffData(String.valueOf(staffId), name, email, phone, password);
 
             if (success) {
                 profileSettings.setStatus("Profile updated successfully", false);
@@ -208,7 +210,7 @@ public class StaffDashboard extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            StaffDashboard dashboard = new StaffDashboard();
+            StaffDashboard dashboard = new StaffDashboard(6);
             dashboard.setVisible(true);
         });
     }

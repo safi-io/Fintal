@@ -17,4 +17,12 @@ public class CustomerController {
     public boolean handleUpdateCustomerData(String accountNumber, String customerName, String customerMail, String customerPhone, String customerPassword) {
         return customerDAO.updateCustomerByAccountNumber(accountNumber, customerName, customerMail, customerPhone, customerPassword);
     }
+
+    public String handlegetAccountNumberByMail(String mail) {
+        return customerDAO.getAccountNumberByMail(mail);
+    }
+
+    public String handlegetAccountTypeByAccountNumber(String id) {
+        return customerDAO.getAccountTypeByAccountNumber(id);
+    }
 }

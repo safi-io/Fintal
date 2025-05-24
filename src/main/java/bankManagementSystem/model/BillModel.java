@@ -9,6 +9,8 @@ public class BillModel {
     private BigDecimal amount;
     private boolean isPaid;
 
+
+
     // For Receiving Data from DB
     public BillModel(String referenceNumber, String consumerName, BigDecimal amount, boolean isPaid) {
         this.referenceNumber = referenceNumber;

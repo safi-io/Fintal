@@ -26,8 +26,11 @@ public class BeneficiaryDashboard extends JFrame {
     public static final Color HEADING_BG = new Color(17, 100, 102);  // #116466
     public static final Color CARD_BG = new Color(224, 228, 228);// #E0E4E4
 
+    private final String accountNumber;
 
-    public BeneficiaryDashboard() {
+
+    public BeneficiaryDashboard(String accountNumber) {
+        this.accountNumber  = accountNumber;
         setTitle("Beneficiary Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -135,13 +138,13 @@ public class BeneficiaryDashboard extends JFrame {
         switch (key) {
             case "Dashboard":
                 MainDashboard dashboardBuilder = new MainDashboard();
-                mainContentPanel.add(dashboardBuilder.buildDashboard("1100"), BorderLayout.CENTER);
+                mainContentPanel.add(dashboardBuilder.buildDashboard(accountNumber ), BorderLayout.CENTER);
                 break;
             case "Upload Bills":
-                mainContentPanel.add(new BillUploadPanel("1100"), BorderLayout.CENTER);
+                mainContentPanel.add(new BillUploadPanel(accountNumber ), BorderLayout.CENTER);
                 break;
             case "Bills Status":
-                mainContentPanel.add(new BillsStatus("1100"), BorderLayout.CENTER);
+                mainContentPanel.add(new BillsStatus(accountNumber ), BorderLayout.CENTER);
                 break;
         }
         mainContentPanel.revalidate();
@@ -154,7 +157,4 @@ public class BeneficiaryDashboard extends JFrame {
         return l;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new BeneficiaryDashboard().setVisible(true));
-    }
 }

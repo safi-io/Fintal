@@ -1,6 +1,7 @@
 package main.java.bankManagementSystem.ui.CustomerDashboard;
 
 import main.java.bankManagementSystem.controller.CustomerDashboard.CustomerController;
+import main.java.bankManagementSystem.ui.CustomerDashboard.Bills.PayBills;
 import main.java.bankManagementSystem.ui.CustomerDashboard.BuildDashboard.MainDashboard;
 import main.java.bankManagementSystem.ui.CustomerDashboard.Loan.LoanDashboard;
 import main.java.bankManagementSystem.ui.CustomerDashboard.Profile.ProfileSettings;
@@ -15,9 +16,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /*
-TODO: HAVE TO DEVELOP BENEFICARY DASHBOARD
-        HASHING PASSWORDS
-        LOGIN AND SIGN UP PAGE
+TODO:   LOGIN AND SIGN UP PAGE
+            + HASHING PASSWORDS
         MAIL NOTIFICATIONS
         STRIPE INTEGERATION
  */
@@ -34,9 +34,11 @@ public class CustomerDashboard extends JFrame {
     public static final Color CARD_BG = new Color(245, 250, 250);
 
     private final CustomerController customerController;
+    private final String loggedInAcc;
 
-    public CustomerDashboard() {
+    public CustomerDashboard(String loggedInAcc) {
         setTitle("Customer Dashboard");
+        this.loggedInAcc = loggedInAcc;
         customerController = new CustomerController();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -81,7 +83,7 @@ public class CustomerDashboard extends JFrame {
         JPanel nav = new JPanel(new GridLayout(6, 1, 0, 8));
         nav.setBackground(SIDEBAR_BG);
         nav.setBorder(new EmptyBorder(25, 10, 10, 10));
-        String[] opts = {"Dashboard", "Send Money", "Transactions", "Loan Management", "Profile Settings"};
+        String[] opts = {"Dashboard", "Send Money", "Transactions", "Pay Bills", "Loan Management", "Profile Settings"};
         for (String o : opts) nav.add(createNavButton(o));
 
         JButton logout = new JButton("Logout");
@@ -139,16 +141,19 @@ public class CustomerDashboard extends JFrame {
 
         switch (key) {
             case "Dashboard":
-                mainContentPanel.add(MainDashboard.buildDashboard(), BorderLayout.CENTER);
+                mainContentPanel.add(MainDashboard.buildDashboard(loggedInAcc), BorderLayout.CENTER);
                 break;
             case "Send Money":
-                mainContentPanel.add(new SendMoney("20"), BorderLayout.CENTER);
+                mainContentPanel.add(new SendMoney(loggedInAcc), BorderLayout.CENTER);
                 break;
             case "Transactions":
-                mainContentPanel.add(new TransactionData(), BorderLayout.CENTER);
+                mainContentPanel.add(new TransactionData(loggedInAcc), BorderLayout.CENTER);
+                break;
+            case "Pay Bills":
+                mainContentPanel.add(new PayBills(loggedInAcc), BorderLayout.CENTER);
                 break;
             case "Loan Management":
-                mainContentPanel.add(new LoanDashboard("20"), BorderLayout.CENTER);
+                mainContentPanel.add(new LoanDashboard(loggedInAcc), BorderLayout.CENTER);
                 break;
             case "Profile Settings":
                 ProfileSettings profileSettings = getProfileSettings();
@@ -161,7 +166,7 @@ public class CustomerDashboard extends JFrame {
     }
 
     private ProfileSettings getProfileSettings() {
-        ProfileSettings profileSettings = new ProfileSettings("20");
+        ProfileSettings profileSettings = new ProfileSettings(loggedInAcc);
 
         // Add listener here
         profileSettings.addUpdateListener(() -> {
@@ -171,7 +176,7 @@ public class CustomerDashboard extends JFrame {
             String password = profileSettings.getPasswordText();
 
             // Call the controller method to update data (you'll need to implement this)
-            boolean success = customerController.handleUpdateCustomerData("20", name, email, phone, password);
+            boolean success = customerController.handleUpdateCustomerData(loggedInAcc, name, email, phone, password);
 
             if (success) {
                 profileSettings.setStatus("Profile updated successfully", false);
@@ -190,6 +195,6 @@ public class CustomerDashboard extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new CustomerDashboard().setVisible(true));
+        SwingUtilities.invokeLater(() -> new CustomerDashboard("20").setVisible(true));
     }
 }

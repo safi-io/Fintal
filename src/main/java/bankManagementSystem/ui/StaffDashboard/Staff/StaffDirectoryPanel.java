@@ -20,10 +20,10 @@ public class StaffDirectoryPanel extends JPanel {
     private final TableRowSorter<DefaultTableModel> sorter;
     private final JTextField nameFilterField;
 
-    public StaffDirectoryPanel() {
+    public StaffDirectoryPanel(int staffId) {
 
         StaffController staffController = new StaffController();
-        List<StaffModel> originalData = staffController.handleGetStaffDataOtherThanId(6);
+        List<StaffModel> originalData = staffController.handleGetStaffDataOtherThanId(staffId);
 
         setLayout(new BorderLayout(10, 10));
         setBackground(Color.WHITE);

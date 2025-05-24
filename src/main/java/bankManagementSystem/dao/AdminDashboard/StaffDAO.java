@@ -188,13 +188,13 @@ public class StaffDAO {
         return staffIDList;
     }
 
-    public StaffModel getStaffById(int branchId) {
+    public StaffModel getStaffById(int staffId) {
         StaffModel staff = null;
         String query = "SELECT * FROM STAFF WHERE STAFF_ID = ?";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setInt(1, branchId);
+            stmt.setInt(1, staffId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     staff = new StaffModel(rs.getInt("STAFF_ID"), rs.getString("STAFF_NAME"), rs.getString("STAFF_MAIL"), rs.getString("STAFF_PHONE"), rs.getString("STAFF_CNIC"), rs.getDate("STAFF_DOB").toLocalDate(), rs.getInt("STAFF_BRANCH_ID"));
@@ -209,36 +209,20 @@ public class StaffDAO {
         return staff;
     }
 
-    public String getPasswordByMail(String staffMail) {
-        String query = "SELECT STAFF_PASSWORD FROM STAFF WHERE STAFF_MAIL = ?";
+    public int getIdByMail(String staffMail) {
+        String query = "SELECT STAFF_ID FROM STAFF WHERE STAFF_MAIL = ?";
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, staffMail);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getString("STAFF_PASSWORD");
-                } else {
-                    return null; // Or throw exception if email doesn't exist
+                    return rs.getInt("STAFF_ID");
                 }
             }
+            return -1;
         } catch (SQLException e) {
-            throw new RuntimeException("Database error while fetching password", e);
+            throw new RuntimeException("Database error while fetching id", e);
         }
     }
 
-    public List<String> getStaffMailList() {
-        List<String> staffMailList = new ArrayList<>();
-        String query = "SELECT STAFF_MAIL AS RESULT FROM STAFF";
-
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                staffMailList.add(rs.getString("RESULT"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        return staffMailList;
-    }
 
 }

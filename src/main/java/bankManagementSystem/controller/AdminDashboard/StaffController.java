@@ -50,30 +50,6 @@ public class StaffController {
         }
     }
 
-    public boolean handleStaffLogin(String staffMail, String plainPassword) {
-        if (staffMail.isEmpty() || plainPassword.isEmpty()) {
-            throw new RuntimeException("All fields must not be empty!");
-        }
-
-        // Get all Mails from DAO
-        List<String> staffMails = staffDAO.getStaffMailList();
-        boolean isFound = staffMails.contains(staffMail);
-
-        if (!isFound) {
-            throw new RuntimeException("Mail mismatched!");
-        }
-
-        // Confirm the password
-        String databasePassword = staffDAO.getPasswordByMail(staffMail);
-        boolean matched = BCrypt.checkpw(plainPassword, databasePassword);
-
-        if (!matched) {
-            throw new RuntimeException("Password mismatched!");
-        }
-
-        return true;
-    }
-
     public boolean handleDeleteStaff(String selectedStaffID) {
 
         try {
@@ -102,14 +78,6 @@ public class StaffController {
         }
     }
 
-    public List<Integer> handleGetAllStaffIds() {
-        try {
-            return staffDAO.getAllStaffIds();
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public StaffModel handleGetStaffById(int branchId) {
         return staffDAO.getStaffById(branchId);
     }
@@ -128,5 +96,9 @@ public class StaffController {
         } catch (IOException e) {
             System.out.println(e.getMessage() + " -- PASSWORD FILE READING");
         }
+    }
+
+    public int handleGetIdByMail(String mail) {
+        return staffDAO.getIdByMail(mail);
     }
 }

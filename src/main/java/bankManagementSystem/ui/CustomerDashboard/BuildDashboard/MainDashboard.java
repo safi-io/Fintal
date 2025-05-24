@@ -12,12 +12,12 @@ import static main.java.bankManagementSystem.ui.CustomerDashboard.CustomerDashbo
 
 public class MainDashboard {
 
-    public static JPanel buildDashboard() {
+    public static JPanel buildDashboard(String loggedInUser) {
 
         AccountController accountController = new AccountController();
         LoanController loanController = new LoanController();
 
-        CustomerAccountBranchModel data = accountController.handleGetDashboardData("20");
+        CustomerAccountBranchModel data = accountController.handleGetDashboardData(loggedInUser);
 
         JPanel p = new JPanel(new GridBagLayout());
         p.setOpaque(false);

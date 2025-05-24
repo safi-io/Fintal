@@ -8,9 +8,6 @@ import main.java.bankManagementSystem.ui.AdminDashboard.Staff.DeleteStaffForm;
 import main.java.bankManagementSystem.ui.AdminDashboard.Staff.UpdateStaffForm;
 import main.java.bankManagementSystem.ui.AdminDashboard.Transactions.ViewTransactionsPanel;
 
-/*
-TODO: TRANSACTIONS LOGS TO BE SHOWED ON ADMIN DASHBOARD
- */
 
 import javax.swing.*;
 import java.awt.*;
