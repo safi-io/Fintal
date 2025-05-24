@@ -177,4 +177,22 @@ public class CustomerDAO {
             throw new RuntimeException("Database error while fetching account type", e);
         }
     }
+
+    public void updateLastLogin(String accountNumber) {
+        String query = """
+                    UPDATE ACCOUNT SET ACCOUNT_LAST_LOGIN = ? WHERE account_number = ?
+                """;
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
+            stmt.setString(2, accountNumber);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update last login date", e);
+        }
+
+
+    }
 }

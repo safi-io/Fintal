@@ -109,8 +109,11 @@ public class CustomerDashboard extends JFrame {
         b.setHorizontalAlignment(SwingConstants.LEFT);
         b.setMargin(new Insets(10, 20, 10, 20));
         b.addActionListener(e -> {
-            if (JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+            int res = JOptionPane.showConfirmDialog(this, "Logout?", "Logout", JOptionPane.YES_NO_OPTION);
+            if (res == 0) {
+                customerController.handleUpdateLastLogin(loggedInAcc);
                 System.exit(0);
+            }
         });
     }
 

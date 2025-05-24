@@ -25,4 +25,8 @@ public class CustomerController {
     public String handlegetAccountTypeByAccountNumber(String id) {
         return customerDAO.getAccountTypeByAccountNumber(id);
     }
+
+    public void handleUpdateLastLogin(String accountNumber) {
+        customerDAO.updateLastLogin(accountNumber);
+    }
 }

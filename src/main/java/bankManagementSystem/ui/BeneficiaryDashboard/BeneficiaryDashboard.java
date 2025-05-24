@@ -1,6 +1,7 @@
 package main.java.bankManagementSystem.ui.BeneficiaryDashboard;
 
 
+import main.java.bankManagementSystem.controller.CustomerDashboard.CustomerController;
 import main.java.bankManagementSystem.ui.BeneficiaryDashboard.Bills.BillUploadPanel;
 import main.java.bankManagementSystem.ui.BeneficiaryDashboard.Bills.BillsStatus;
 import main.java.bankManagementSystem.ui.BeneficiaryDashboard.BuildDashboard.MainDashboard;
@@ -27,10 +28,12 @@ public class BeneficiaryDashboard extends JFrame {
     public static final Color CARD_BG = new Color(224, 228, 228);// #E0E4E4
 
     private final String accountNumber;
+    private final CustomerController customerController;
 
 
     public BeneficiaryDashboard(String accountNumber) {
-        this.accountNumber  = accountNumber;
+        this.customerController = new CustomerController();
+        this.accountNumber = accountNumber;
         setTitle("Beneficiary Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -127,8 +130,14 @@ public class BeneficiaryDashboard extends JFrame {
         b.setHorizontalAlignment(SwingConstants.LEFT);
         b.setMargin(new Insets(10, 20, 10, 20));
         b.addActionListener(e -> {
-            if (JOptionPane.showConfirmDialog(this, "Logout?", "Logout", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+
+            // Update Last Login
+
+            int res = JOptionPane.showConfirmDialog(this, "Logout?", "Logout", JOptionPane.YES_NO_OPTION);
+            if (res == 0) {
+                customerController.handleUpdateLastLogin(accountNumber);
                 System.exit(0);
+            }
         });
     }
 
@@ -138,13 +147,13 @@ public class BeneficiaryDashboard extends JFrame {
         switch (key) {
             case "Dashboard":
                 MainDashboard dashboardBuilder = new MainDashboard();
-                mainContentPanel.add(dashboardBuilder.buildDashboard(accountNumber ), BorderLayout.CENTER);
+                mainContentPanel.add(dashboardBuilder.buildDashboard(accountNumber), BorderLayout.CENTER);
                 break;
             case "Upload Bills":
-                mainContentPanel.add(new BillUploadPanel(accountNumber ), BorderLayout.CENTER);
+                mainContentPanel.add(new BillUploadPanel(accountNumber), BorderLayout.CENTER);
                 break;
             case "Bills Status":
-                mainContentPanel.add(new BillsStatus(accountNumber ), BorderLayout.CENTER);
+                mainContentPanel.add(new BillsStatus(accountNumber), BorderLayout.CENTER);
                 break;
         }
         mainContentPanel.revalidate();
@@ -157,4 +166,7 @@ public class BeneficiaryDashboard extends JFrame {
         return l;
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new BeneficiaryDashboard("1100").setVisible(true));
+    }
 }
