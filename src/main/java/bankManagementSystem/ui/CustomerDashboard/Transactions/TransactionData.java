@@ -17,12 +17,11 @@ public class TransactionData extends JPanel {
     private final List<TransactionCustomerModel> originalData;
     private final TransactionsController transactionsController;
 
-    public TransactionData() {
-        System.out.println("hello");
+    public TransactionData(String loggedInUser) {
         transactionsController = new TransactionsController();
 
         // Replace hardcoded account number with actual dynamic value
-        originalData = transactionsController.handleGetAllTransactionsByAccountNumber("20");
+        originalData = transactionsController.handleGetAllTransactionsByAccountNumber(loggedInUser);
 
         setLayout(new BorderLayout(10, 10));
         setBackground(Color.WHITE);

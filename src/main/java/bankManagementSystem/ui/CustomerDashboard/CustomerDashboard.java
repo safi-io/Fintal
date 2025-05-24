@@ -1,6 +1,7 @@
 package main.java.bankManagementSystem.ui.CustomerDashboard;
 
 import main.java.bankManagementSystem.controller.CustomerDashboard.CustomerController;
+import main.java.bankManagementSystem.ui.CustomerDashboard.Bills.PayBills;
 import main.java.bankManagementSystem.ui.CustomerDashboard.BuildDashboard.MainDashboard;
 import main.java.bankManagementSystem.ui.CustomerDashboard.Loan.LoanDashboard;
 import main.java.bankManagementSystem.ui.CustomerDashboard.Profile.ProfileSettings;
@@ -81,7 +82,7 @@ public class CustomerDashboard extends JFrame {
         JPanel nav = new JPanel(new GridLayout(6, 1, 0, 8));
         nav.setBackground(SIDEBAR_BG);
         nav.setBorder(new EmptyBorder(25, 10, 10, 10));
-        String[] opts = {"Dashboard", "Send Money", "Transactions", "Loan Management", "Profile Settings"};
+        String[] opts = {"Dashboard", "Send Money", "Transactions", "Pay Bills", "Loan Management", "Profile Settings"};
         for (String o : opts) nav.add(createNavButton(o));
 
         JButton logout = new JButton("Logout");
@@ -139,13 +140,16 @@ public class CustomerDashboard extends JFrame {
 
         switch (key) {
             case "Dashboard":
-                mainContentPanel.add(MainDashboard.buildDashboard(), BorderLayout.CENTER);
+                mainContentPanel.add(MainDashboard.buildDashboard("20"), BorderLayout.CENTER);
                 break;
             case "Send Money":
                 mainContentPanel.add(new SendMoney("20"), BorderLayout.CENTER);
                 break;
             case "Transactions":
-                mainContentPanel.add(new TransactionData(), BorderLayout.CENTER);
+                mainContentPanel.add(new TransactionData("20"), BorderLayout.CENTER);
+                break;
+            case "Pay Bills":
+                mainContentPanel.add(new PayBills("20"), BorderLayout.CENTER);
                 break;
             case "Loan Management":
                 mainContentPanel.add(new LoanDashboard("20"), BorderLayout.CENTER);
