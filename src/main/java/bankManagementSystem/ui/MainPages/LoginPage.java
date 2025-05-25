@@ -174,8 +174,12 @@ public class LoginPage extends JFrame {
         signUpButton.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_BORDERLESS);
         signUpButton.setForeground(Color.BLACK); // Lighter blue for dark theme
         signUpButton.setFont(signUpButton.getFont().deriveFont(Font.PLAIN, 15f)); // Larger text
-        signUpButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Sign Up functionality coming soon!", "Information", JOptionPane.INFORMATION_MESSAGE));
+        signUpButton.addActionListener(e -> {
+            new SignUpPage();
+            dispose();
+        });
         loginFormPanel.add(signUpButton, gbc);
+
 
         // --- Status Label (for errors/messages) ---
         gbc.gridx = 0;
@@ -270,6 +274,16 @@ public class LoginPage extends JFrame {
                 // Fetch Type
                 String type = customerController.handlegetAccountTypeByAccountNumber(accountNumber);
 
+                // Is Account Opened
+                boolean isAccountOpened = customerController.handleGetIsAccountOpened(accountNumber);
+
+                if (!isAccountOpened) {
+                    JOptionPane.showMessageDialog(null, "Account is not opened yet, you will be informed by mail...", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    emailField.setText("");
+                    passwordField.setText("");
+                    return;
+                }
+
                 if (type.equals("beneficiary")) {
                     SwingUtilities.invokeLater(() -> {
                         BeneficiaryDashboard dashboard = new BeneficiaryDashboard(accountNumber);
@@ -286,7 +300,6 @@ public class LoginPage extends JFrame {
 
 
             }
-
 
             showStatus("Logged In!", false);
 

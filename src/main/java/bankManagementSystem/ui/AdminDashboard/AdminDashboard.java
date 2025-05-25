@@ -7,6 +7,7 @@ import main.java.bankManagementSystem.ui.AdminDashboard.Staff.CreateStaffForm;
 import main.java.bankManagementSystem.ui.AdminDashboard.Staff.DeleteStaffForm;
 import main.java.bankManagementSystem.ui.AdminDashboard.Staff.UpdateStaffForm;
 import main.java.bankManagementSystem.ui.AdminDashboard.Transactions.ViewTransactionsPanel;
+import main.java.bankManagementSystem.ui.MainPages.LoginPage;
 
 
 import javax.swing.*;
@@ -74,7 +75,10 @@ public class AdminDashboard extends JFrame {
         logoutButton.addActionListener(e -> {
             int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.YES_OPTION) {
-                System.exit(0);
+                SwingUtilities.invokeLater(() -> {
+                    new LoginPage();
+                    dispose();
+                });
             }
         });
 

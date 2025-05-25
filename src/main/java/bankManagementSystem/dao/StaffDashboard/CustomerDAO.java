@@ -195,4 +195,26 @@ public class CustomerDAO {
 
 
     }
+
+    public boolean getIsAccountOpened(String accountNumber) {
+        String query = "SELECT ACCOUNT_IS_OPENED FROM ACCOUNT WHERE ACCOUNT_NUMBER = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, accountNumber);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getBoolean("ACCOUNT_IS_OPENED");
+            } else {
+                // Account not found, return false or throw exception based on your logic
+                return false;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get account status", e);
+        }
+    }
+
 }

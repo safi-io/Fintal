@@ -1,7 +1,6 @@
 package main.java.bankManagementSystem.controller.MainPages;
 
 import main.java.bankManagementSystem.dao.MainPages.LoginDAO;
-import main.java.bankManagementSystem.dao.StaffDashboard.AccountDAO;
 
 public class LoginController {
     private LoginDAO loginDAO;

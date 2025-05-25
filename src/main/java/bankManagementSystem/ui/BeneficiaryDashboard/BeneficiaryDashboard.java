@@ -5,6 +5,7 @@ import main.java.bankManagementSystem.controller.CustomerDashboard.CustomerContr
 import main.java.bankManagementSystem.ui.BeneficiaryDashboard.Bills.BillUploadPanel;
 import main.java.bankManagementSystem.ui.BeneficiaryDashboard.Bills.BillsStatus;
 import main.java.bankManagementSystem.ui.BeneficiaryDashboard.BuildDashboard.MainDashboard;
+import main.java.bankManagementSystem.ui.MainPages.LoginPage;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -136,7 +137,10 @@ public class BeneficiaryDashboard extends JFrame {
             int res = JOptionPane.showConfirmDialog(this, "Logout?", "Logout", JOptionPane.YES_NO_OPTION);
             if (res == 0) {
                 customerController.handleUpdateLastLogin(accountNumber);
-                System.exit(0);
+                SwingUtilities.invokeLater(() -> {
+                    new LoginPage();
+                    dispose();
+                });
             }
         });
     }

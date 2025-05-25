@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.Properties;
 
 public class AccountDAO {
@@ -45,7 +46,22 @@ public class AccountDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                requiredDashboardData = new CustomerAccountBranchModel(rs.getString("account_number"), rs.getString("account_type"), rs.getBigDecimal("account_current_balance"), rs.getDate("account_opening_date").toLocalDate(), rs.getDate("account_last_login").toLocalDate(), rs.getString("branch_name"), rs.getString("customer_name"));
+                LocalDate lastLoginDate = null;
+                Date lastLoginSqlDate = rs.getDate("account_last_login");
+                if (lastLoginSqlDate != null) {
+                    lastLoginDate = lastLoginSqlDate.toLocalDate();
+                }
+
+                requiredDashboardData = new CustomerAccountBranchModel(
+                        rs.getString("account_number"),
+                        rs.getString("account_type"),
+                        rs.getBigDecimal("account_current_balance"),
+                        rs.getDate("account_opening_date").toLocalDate(),
+                        lastLoginDate,
+                        rs.getString("branch_name"),
+                        rs.getString("customer_name")
+                );
+
             }
         } catch (SQLException e) {
             e.printStackTrace();

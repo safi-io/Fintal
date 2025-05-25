@@ -1,6 +1,7 @@
 package main.java.bankManagementSystem.ui.StaffDashboard;
 
 import main.java.bankManagementSystem.controller.StaffDashboard.StaffController;
+import main.java.bankManagementSystem.ui.MainPages.LoginPage;
 import main.java.bankManagementSystem.ui.StaffDashboard.Accounts.AccountsApplication;
 import main.java.bankManagementSystem.ui.StaffDashboard.Accounts.AccountData;
 import main.java.bankManagementSystem.ui.StaffDashboard.Customer.CustomerData;
@@ -72,7 +73,10 @@ public class StaffDashboard extends JFrame {
         logoutButton.addActionListener(e -> {
             int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.YES_OPTION) {
-                System.exit(0);
+                SwingUtilities.invokeLater(() -> {
+                    new LoginPage();
+                    dispose();
+                });
             }
         });
 

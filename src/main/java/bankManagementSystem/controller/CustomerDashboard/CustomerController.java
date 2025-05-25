@@ -37,4 +37,8 @@ public class CustomerController {
     public void handleUpdateLastLogin(String accountNumber) {
         customerDAO.updateLastLogin(accountNumber);
     }
+
+    public boolean handleGetIsAccountOpened(String accountNumber) {
+        return customerDAO.getIsAccountOpened(accountNumber);
+    }
 }

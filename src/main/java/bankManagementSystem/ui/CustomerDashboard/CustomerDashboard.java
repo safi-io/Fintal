@@ -7,6 +7,8 @@ import main.java.bankManagementSystem.ui.CustomerDashboard.Loan.LoanDashboard;
 import main.java.bankManagementSystem.ui.CustomerDashboard.Profile.ProfileSettings;
 import main.java.bankManagementSystem.ui.CustomerDashboard.Transactions.SendMoney;
 import main.java.bankManagementSystem.ui.CustomerDashboard.Transactions.TransactionData;
+import main.java.bankManagementSystem.ui.MainPages.LoginPage;
+import main.java.bankManagementSystem.ui.MainPages.SignUpPage;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,8 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /*
-TODO:   LOGIN AND SIGN UP PAGE
-            + HASHING PASSWORDS
+TODO:   SIGN UP PAGE
         MAIL NOTIFICATIONS
         STRIPE INTEGERATION
  */
@@ -112,7 +113,11 @@ public class CustomerDashboard extends JFrame {
             int res = JOptionPane.showConfirmDialog(this, "Logout?", "Logout", JOptionPane.YES_NO_OPTION);
             if (res == 0) {
                 customerController.handleUpdateLastLogin(loggedInAcc);
-                System.exit(0);
+                SwingUtilities.invokeLater(() -> {
+                    new LoginPage();
+                    dispose();
+                });
+                dispose(); // Close the current window
             }
         });
     }
