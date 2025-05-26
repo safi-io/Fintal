@@ -4,6 +4,7 @@ import main.java.bankManagementSystem.model.CustomerAccountBranchModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -93,5 +94,29 @@ public class AccountDAO {
 
         return name;
     }
+
+    public boolean addStripeAmount(String accountNumber) {
+        String query = """
+                UPDATE account 
+                SET account_current_balance = account_current_balance + 10000 
+                WHERE account_number = ?
+                """;
+
+        int rowsAffected = 0;
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, accountNumber);
+            rowsAffected = stmt.executeUpdate();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();  // Optionally log or rethrow
+        }
+
+        return rowsAffected > 0;
+    }
+
 
 }

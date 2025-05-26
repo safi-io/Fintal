@@ -20,7 +20,6 @@ public class MainDashboard {
         this.dashboardController = new DashboardController();
         CustomerAccountBillModel data = dashboardController.dashboardData(beneficiaryAccountNumber);
 
-        // ── Dummy data ───────────────────────────────────────────────
         BigDecimal totalUnpaidAmount = data.getUnPaidAmount();
         BigDecimal totalPaidAmount = data.getPaidAmount();
         int unpaidCount = data.getUnPaidCount();
@@ -28,7 +27,6 @@ public class MainDashboard {
         LocalDate lastLoginDate = data.getLastLogin();
         String beneficiaryName = data.getBeneficiaryName();
         String accountNumber = data.getBeneficiaryAccountNumber();
-        // ─────────────────────────────────────────────────────────────
 
         JPanel grid = new JPanel(new GridBagLayout());
         grid.setOpaque(false);
@@ -40,6 +38,11 @@ public class MainDashboard {
         gc.weightx = 1;
         gc.weighty = 1;
 
+        // 📅 Last Login
+        String lastLoginText = (data.getLastLogin() != null)
+                ? data.getLastLogin().toString()
+                : "First Login!";
+
         JPanel[] cards = {statCard(new Utils.CounterLabel(0, totalUnpaidAmount.doubleValue(), 2500), "Unpaid Amount", 46, new Color(192, 57, 43)),
 
                 statCard(new Utils.CounterLabel(0, totalPaidAmount.doubleValue(), 2500), "Paid Amount", 46, new Color(39, 174, 96)),
@@ -48,7 +51,7 @@ public class MainDashboard {
 
                 statCard(new Utils.AlphaFadeLabel(String.valueOf(paidCount), 2000), "Paid Bills", 40, new Color(46, 204, 113)),
 
-                statCard(new Utils.AlphaFadeLabel(lastLoginDate.toString(), 1000), "Last Login", 28, new Color(52, 73, 94)),
+                statCard(new Utils.AlphaFadeLabel(lastLoginText, 1000), "Last Login", 28, new Color(52, 73, 94)),
 
                 statCard(new Utils.AlphaFadeLabel(beneficiaryName.toUpperCase(), 1000), "Beneficiary", 28, new Color(52, 73, 94)),
 

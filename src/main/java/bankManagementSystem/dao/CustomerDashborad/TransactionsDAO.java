@@ -90,7 +90,6 @@ public class TransactionsDAO {
             }
 
             conn.commit();                                    // ➋ success
-            System.out.println("Transfer successful.");
             return debitTxnId;                                // ➌ return proof ID
 
         } catch (Exception e) {
@@ -112,7 +111,6 @@ public class TransactionsDAO {
     }
 
     public List<TransactionCustomerModel> getAllTransactionsByAccountNumber(String accountNumber) {
-        System.out.println(accountNumber);
         String query = "SELECT\n" + "  T.TRANSACTION_TYPE,\n" + "  T.TRANSACTION_AMOUNT,\n" + "  T.TRANSACTION_DESCRIPTION,\n" + "  CP.ACCOUNT_NUMBER AS counterparty_account,\n" + "  CCP.CUSTOMER_NAME AS COUNTER_PARTY_NAME,\n" + "  T.TIMESTAMP\n" + "  \n" + "FROM TRANSACTIONS AS T\n" + "INNER JOIN ACCOUNT AS MP ON T.ACCOUNT_NUMBER = MP.ACCOUNT_NUMBER\n" + "INNER JOIN ACCOUNT AS CP ON T.COUNTERPARTY_ACCOUNT = CP.ACCOUNT_NUMBER\n" + "\n" + "JOIN CUSTOMER AS CMP ON MP.ACCOUNT_CUSTOMER_CNIC = CMP.CUSTOMER_CNIC\n" + "JOIN CUSTOMER AS CCP ON CP.ACCOUNT_CUSTOMER_CNIC = CCP.CUSTOMER_CNIC\n" + "WHERE T.ACCOUNT_NUMBER = ? ORDER BY TIMESTAMP DESC;";
 
         List<TransactionCustomerModel> transactionCustomerModelList = new ArrayList<>();
@@ -126,7 +124,6 @@ public class TransactionsDAO {
 
                 transactionCustomerModelList.add(transaction);
             }
-            System.out.println(transactionCustomerModelList);
             return transactionCustomerModelList;
 
         } catch (SQLException e) {

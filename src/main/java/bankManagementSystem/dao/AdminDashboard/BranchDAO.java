@@ -85,7 +85,7 @@ public class BranchDAO {
 
     public List<String> getBranchIdNameList() {
         List<String> branchList = new ArrayList<>();
-        String query = "SELECT CONCAT(BRANCH_ID, ' - ', BRANCH_NAME) AS RESULT FROM BRANCH";
+        String query = "SELECT CONCAT(BRANCH_ID, ' _ ', BRANCH_NAME) AS RESULT FROM BRANCH";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
 

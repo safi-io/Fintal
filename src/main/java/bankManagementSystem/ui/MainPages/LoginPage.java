@@ -284,6 +284,16 @@ public class LoginPage extends JFrame {
                     return;
                 }
 
+                // Is Account Deleted
+                boolean isAccountDeleted = customerController.handleGetIsAccountDeleted(accountNumber);
+
+                if (isAccountDeleted) {
+                    JOptionPane.showMessageDialog(null, "Account is deleted!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    emailField.setText("");
+                    passwordField.setText("");
+                    return;
+                }
+
                 if (type.equals("beneficiary")) {
                     SwingUtilities.invokeLater(() -> {
                         BeneficiaryDashboard dashboard = new BeneficiaryDashboard(accountNumber);

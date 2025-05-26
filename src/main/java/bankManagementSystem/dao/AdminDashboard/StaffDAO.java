@@ -158,7 +158,7 @@ public class StaffDAO {
 
     public List<String> getStaffIdNameList() {
         List<String> staffIdList = new ArrayList<>();
-        String query = "SELECT CONCAT(STAFF_ID, ' - ', STAFF_NAME) AS RESULT FROM STAFF";
+        String query = "SELECT CONCAT(STAFF_ID, ' _ ', STAFF_NAME) AS RESULT FROM STAFF";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
 

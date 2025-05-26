@@ -215,7 +215,7 @@ public class PayBills extends JPanel {
 
         // ── call controller ──────────────────────────────────────
         try {
-            BillModel bill = billController.handleGetBill(currentBeneficiaryAcc.split("-")[0], ref);
+            BillModel bill = billController.handleGetBill(currentBeneficiaryAcc.split("_")[0], ref);
 
             if (bill == null) {
                 showStatus("No bill found for that reference.", true);
@@ -254,7 +254,7 @@ public class PayBills extends JPanel {
         try {
             boolean ok = billController.handlePayBill(
                     loggedInAcc,
-                    currentBeneficiaryAcc.split("-")[0],
+                    currentBeneficiaryAcc.split("_")[0],
                     fetchedBill.getReferenceNumber(),
                     fetchedBill.getAmount());
 

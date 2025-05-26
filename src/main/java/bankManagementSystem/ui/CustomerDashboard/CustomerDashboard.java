@@ -1,6 +1,7 @@
 package main.java.bankManagementSystem.ui.CustomerDashboard;
 
 import main.java.bankManagementSystem.controller.CustomerDashboard.CustomerController;
+import main.java.bankManagementSystem.utils.StripePaymentHandler;
 import main.java.bankManagementSystem.ui.CustomerDashboard.Bills.PayBills;
 import main.java.bankManagementSystem.ui.CustomerDashboard.BuildDashboard.MainDashboard;
 import main.java.bankManagementSystem.ui.CustomerDashboard.Loan.LoanDashboard;
@@ -8,7 +9,6 @@ import main.java.bankManagementSystem.ui.CustomerDashboard.Profile.ProfileSettin
 import main.java.bankManagementSystem.ui.CustomerDashboard.Transactions.SendMoney;
 import main.java.bankManagementSystem.ui.CustomerDashboard.Transactions.TransactionData;
 import main.java.bankManagementSystem.ui.MainPages.LoginPage;
-import main.java.bankManagementSystem.ui.MainPages.SignUpPage;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,15 +18,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /*
-TODO:   SIGN UP PAGE
-        MAIL NOTIFICATIONS
-        STRIPE INTEGERATION
+TODO:   FORGOT PASSWORD, MAIL NOTIFICATIONS
  */
 
 public class CustomerDashboard extends JFrame {
 
     private final JPanel mainContentPanel;
     private JButton currentlySelectedButton;
+    private JPanel nav;
 
     public static final Color SIDEBAR_BG = new Color(25, 55, 77);
     public static final Color BUTTON_BG = new Color(45, 85, 115);
@@ -81,10 +80,10 @@ public class CustomerDashboard extends JFrame {
         sidebar.setBackground(SIDEBAR_BG);
         sidebar.setPreferredSize(new Dimension(280, getHeight()));
 
-        JPanel nav = new JPanel(new GridLayout(6, 1, 0, 8));
+        nav = new JPanel(new GridLayout(7, 1, 0, 8));
         nav.setBackground(SIDEBAR_BG);
         nav.setBorder(new EmptyBorder(25, 10, 10, 10));
-        String[] opts = {"Dashboard", "Send Money", "Transactions", "Pay Bills", "Loan Management", "Profile Settings"};
+        String[] opts = {"Dashboard", "Send Money", "Add Money", "Transactions", "Pay Bills", "Loan Management", "Profile Settings"};
         for (String o : opts) nav.add(createNavButton(o));
 
         JButton logout = new JButton("Logout");
@@ -145,25 +144,41 @@ public class CustomerDashboard extends JFrame {
     }
 
     private void switchPanel(String key) {
-        mainContentPanel.removeAll();
+
 
         switch (key) {
             case "Dashboard":
+                mainContentPanel.removeAll();
                 mainContentPanel.add(MainDashboard.buildDashboard(loggedInAcc), BorderLayout.CENTER);
                 break;
             case "Send Money":
+                mainContentPanel.removeAll();
                 mainContentPanel.add(new SendMoney(loggedInAcc), BorderLayout.CENTER);
                 break;
+            case "Add Money":
+                StripePaymentHandler handler = new StripePaymentHandler(loggedInAcc, () -> {
+                    mainContentPanel.removeAll();
+                    mainContentPanel.add(MainDashboard.buildDashboard(loggedInAcc), BorderLayout.CENTER);
+                    mainContentPanel.revalidate();
+                    mainContentPanel.repaint();
+                });
+                handler.initiatePayment();
+                SwingUtilities.invokeLater(() -> ((JButton) nav.getComponent(0)).doClick());
+                break;
             case "Transactions":
+                mainContentPanel.removeAll();
                 mainContentPanel.add(new TransactionData(loggedInAcc), BorderLayout.CENTER);
                 break;
             case "Pay Bills":
+                mainContentPanel.removeAll();
                 mainContentPanel.add(new PayBills(loggedInAcc), BorderLayout.CENTER);
                 break;
             case "Loan Management":
+                mainContentPanel.removeAll();
                 mainContentPanel.add(new LoanDashboard(loggedInAcc), BorderLayout.CENTER);
                 break;
             case "Profile Settings":
+                mainContentPanel.removeAll();
                 ProfileSettings profileSettings = getProfileSettings();
                 mainContentPanel.add(profileSettings, BorderLayout.CENTER);
                 break;
@@ -200,9 +215,5 @@ public class CustomerDashboard extends JFrame {
         JLabel l = new JLabel(t, SwingConstants.CENTER);
         l.setFont(new Font("SansSerif", Font.BOLD, 28));
         return l;
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new CustomerDashboard("20").setVisible(true));
     }
 }

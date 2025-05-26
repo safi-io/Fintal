@@ -8,7 +8,7 @@ public class Utils {
     // Utils Classes for Building Customer Dashboard
     public static class CounterLabel extends JLabel {
         public CounterLabel(double start, double end, int ms) {
-            super("<html><small>PKR</small> 0.00</html>");
+            super();
             DecimalFormat fmt = new DecimalFormat("#,##0.00");
             int frames = Math.max(1, ms / 30);
             double step = (end - start) / frames;
@@ -22,11 +22,16 @@ public class Utils {
                     current[0] = end;
                     t.stop();
                 }
-                setText("<html><small>PKR</small> " + fmt.format(current[0]) + "</html>");
+                setText("<html>"
+                        + "<span style='font-size:10px;'>PKR</span> "
+                        + "<span style='font-size:30px;'>" + fmt.format(current[0]) + "</span>"
+                        + "</html>");
+
             });
             t.setInitialDelay(200);
             t.start();
         }
+
     }
 
 

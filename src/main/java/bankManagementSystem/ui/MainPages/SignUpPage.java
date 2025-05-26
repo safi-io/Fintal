@@ -233,7 +233,7 @@ public class SignUpPage extends JFrame {
         String dob = dobField.getText();
         String password = passwordField.getText();
         String accountType = accountTypeCombo.getSelectedItem().toString();
-        String branchId = branchIdCombo.getSelectedItem().toString().split("-")[0].trim();
+        String branchId = branchIdCombo.getSelectedItem().toString().split("_")[0].trim();
 
         try {
             boolean ok = signUpController.handleCreateCustomerAccount(name, cnic, mail, phone, dob, password, accountType, branchId);

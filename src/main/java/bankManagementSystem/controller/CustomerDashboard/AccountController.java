@@ -18,4 +18,8 @@ public class AccountController {
         return accountDAO.getCustomerNameUsingAccountNumber(accountNumber);
     }
 
+    public boolean handleAddStripeAmount(String accountNumber) {
+        return accountDAO.addStripeAmount(accountNumber);
+    }
+
 }

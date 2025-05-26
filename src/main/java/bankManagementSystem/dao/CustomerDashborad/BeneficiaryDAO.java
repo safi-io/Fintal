@@ -35,7 +35,7 @@ public class BeneficiaryDAO {
 
     public List<String> getBeneficiaryAccountNumbers() {
         List<String> beneficiaryList = new ArrayList<>();
-        String query = "SELECT CONCAT(A.ACCOUNT_NUMBER, '-', B.CUSTOMER_NAME) AS RESULT FROM ACCOUNT AS A\n" +
+        String query = "SELECT CONCAT(A.ACCOUNT_NUMBER, '_', B.CUSTOMER_NAME) AS RESULT FROM ACCOUNT AS A\n" +
                 "JOIN CUSTOMER AS B\n" +
                 "ON A.ACCOUNT_CUSTOMER_CNIC = B.CUSTOMER_CNIC\n" +
                 "WHERE A.ACCOUNT_TYPE = 'beneficiary';";

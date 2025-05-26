@@ -217,7 +217,6 @@ public class CreateStaffForm extends JPanel {
                 branchDropdown.addItem(id);
             }
         } catch (RuntimeException ex) {
-            System.out.println(ex.getMessage());
             setStatus("Failed to load branch IDs.", true);
         }
     }

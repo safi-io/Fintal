@@ -41,4 +41,8 @@ public class CustomerController {
     public boolean handleGetIsAccountOpened(String accountNumber) {
         return customerDAO.getIsAccountOpened(accountNumber);
     }
+
+    public boolean handleGetIsAccountDeleted(String accountNumber) {
+        return customerDAO.getIsAccountDeleted(accountNumber);
+    }
 }
