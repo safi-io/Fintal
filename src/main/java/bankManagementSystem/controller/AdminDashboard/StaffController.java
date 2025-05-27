@@ -3,6 +3,7 @@ package main.java.bankManagementSystem.controller.AdminDashboard;
 import main.java.bankManagementSystem.dao.AdminDashboard.StaffDAO;
 import main.java.bankManagementSystem.model.StaffModel;
 
+import main.java.bankManagementSystem.utils.emailSender;
 import org.mindrot.jbcrypt.BCrypt;
 
 
@@ -24,6 +25,9 @@ public class StaffController {
 
         String password = java.util.UUID.randomUUID().toString().replace("-", "").substring(0, 10);
         // Send the upper password as mail, and then hash it and store inside database
+
+        emailSender mail = new emailSender();
+        mail.sendEmail(staffMail, staffName + ", Your Portal has been created!", "Here is your portal password: " + password);
 
         String staffHashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 

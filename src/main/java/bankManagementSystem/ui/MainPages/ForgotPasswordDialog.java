@@ -2,6 +2,8 @@ package main.java.bankManagementSystem.ui.MainPages;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import main.java.bankManagementSystem.controller.MainPages.ForgetController;
+import main.java.bankManagementSystem.utils.emailSender;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -22,69 +24,73 @@ public class ForgotPasswordDialog extends JDialog {
     private JButton resetButton;
     private JPanel cardPanel;
     private CardLayout cardLayout;
+    private String generatedOTP;
 
-    // Email validation pattern
+    private final ForgetController forgetController;
+
+    // E‑mail validation pattern
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
 
     public ForgotPasswordDialog(JFrame owner) {
         super(owner, "Forgot Password", true);
+        this.forgetController = new ForgetController();
         setUndecorated(true);
 
-        // Setup FlatLaf Dark Theme
+        // ---  UI setup  --------------------------------------------------------
         try {
             FlatMacDarkLaf.setup();
         } catch (Exception e) {
-            System.err.println("Failed to initialize FlatLaf in dialog: " + e);
+            System.err.println("Failed to initialise FlatLaf in dialog: " + e);
         }
 
-        // Main container with modern styling
         JPanel mainContainer = new JPanel(new BorderLayout());
         mainContainer.setBorder(new EmptyBorder(10, 10, 10, 10));
         mainContainer.setBackground(new Color(28, 35, 43));
         setContentPane(mainContainer);
 
-        // Header panel with close button
-        JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setOpaque(false);
-        headerPanel.setBorder(new EmptyBorder(0, 0, 20, 0));
+        header(mainContainer);
+        body(mainContainer);
 
-        JLabel titleLabel = new JLabel("Forgot Password?");
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        titleLabel.setForeground(new Color(220, 220, 220));
-        headerPanel.add(titleLabel, BorderLayout.WEST);
-
-        JButton closeButton = new JButton("X");
-        closeButton.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        closeButton.setContentAreaFilled(false);
-        closeButton.setBorderPainted(false);
-        closeButton.setFocusPainted(false);
-        closeButton.setForeground(new Color(180, 180, 180));
-        closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        closeButton.addActionListener(e -> dispose());
-        headerPanel.add(closeButton, BorderLayout.EAST);
-
-        mainContainer.add(headerPanel, BorderLayout.NORTH);
-
-        // Card layout for multi-step process
-        cardLayout = new CardLayout();
-        cardPanel = new JPanel(cardLayout);
-        cardPanel.setOpaque(false);
-
-        // Panel 1: Role selection
-        JPanel roleSelectionPanel = createRoleSelectionPanel();
-        cardPanel.add(roleSelectionPanel, "ROLE_SELECTION");
-
-        // Panel 2: Email and OTP process
-        JPanel emailOtpPanel = createEmailOtpPanel();
-        cardPanel.add(emailOtpPanel, "EMAIL_OTP");
-
-        mainContainer.add(cardPanel, BorderLayout.CENTER);
-
-        // Set dialog size and position
         setSize(450, 500);
         setLocationRelativeTo(owner);
     }
 
+    // --------------------------------------------------------------------- UI blocks
+    private void header(JPanel container) {
+        JPanel header = new JPanel(new BorderLayout());
+        header.setOpaque(false);
+        header.setBorder(new EmptyBorder(0, 0, 20, 0));
+
+        JLabel title = new JLabel("Forgot Password?");
+        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        title.setForeground(new Color(220, 220, 220));
+        header.add(title, BorderLayout.WEST);
+
+        JButton close = new JButton("X");
+        close.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        close.setContentAreaFilled(false);
+        close.setBorderPainted(false);
+        close.setFocusPainted(false);
+        close.setForeground(new Color(180, 180, 180));
+        close.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        close.addActionListener(e -> dispose());
+        header.add(close, BorderLayout.EAST);
+
+        container.add(header, BorderLayout.NORTH);
+    }
+
+    private void body(JPanel container) {
+        cardLayout = new CardLayout();
+        cardPanel = new JPanel(cardLayout);
+        cardPanel.setOpaque(false);
+
+        cardPanel.add(createRoleSelectionPanel(), "ROLE_SELECTION");
+        cardPanel.add(createEmailOtpPanel(), "EMAIL_OTP");
+
+        container.add(cardPanel, BorderLayout.CENTER);
+    }
+
+    // -------------------------------------  Panel 1 : choose role -------------
     private JPanel createRoleSelectionPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
@@ -95,20 +101,20 @@ public class ForgotPasswordDialog extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
 
-        // Instruction label
+        // Instruction
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        JLabel instructionLabel = new JLabel("Select your role to reset password");
-        instructionLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        instructionLabel.setForeground(new Color(170, 170, 170));
-        instructionLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        panel.add(instructionLabel, gbc);
+        JLabel instruction = new JLabel("Select your role to reset password");
+        instruction.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        instruction.setForeground(new Color(170, 170, 170));
+        instruction.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(instruction, gbc);
 
-        // Role selection combo box
+        // Combo box
         gbc.gridy = 1;
         gbc.insets = new Insets(15, 0, 15, 0);
-        String[] roles = {"Customer", "Bank Employee", "Administrator"};
+        String[] roles = {"Customer", "Staff"};
         roleComboBox = new JComboBox<>(roles);
         roleComboBox.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         roleComboBox.setBackground(new Color(40, 40, 40));
@@ -137,7 +143,7 @@ public class ForgotPasswordDialog extends JDialog {
         nextButton.addActionListener(e -> cardLayout.show(cardPanel, "EMAIL_OTP"));
         panel.add(nextButton, gbc);
 
-        // Status label
+        // Status
         gbc.gridy = 3;
         gbc.insets = new Insets(10, 0, 0, 0);
         statusLabel = new JLabel(" ");
@@ -149,6 +155,7 @@ public class ForgotPasswordDialog extends JDialog {
         return panel;
     }
 
+    // -------------------------------------  Panel 2 : e‑mail + OTP ------------
     private JPanel createEmailOtpPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
@@ -159,17 +166,17 @@ public class ForgotPasswordDialog extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
 
-        // Instruction label
+        // Instruction
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        JLabel instructionLabel = new JLabel("Enter your email address to receive a verification code");
-        instructionLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        instructionLabel.setForeground(new Color(170, 170, 170));
-        instructionLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        panel.add(instructionLabel, gbc);
+        JLabel instruction = new JLabel("Enter your email address to receive a verification code");
+        instruction.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        instruction.setForeground(new Color(170, 170, 170));
+        instruction.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(instruction, gbc);
 
-        // Email field
+        // E‑mail field
         gbc.gridy = 1;
         gbc.insets = new Insets(15, 0, 15, 0);
         otpEmailField = new JTextField();
@@ -178,7 +185,7 @@ public class ForgotPasswordDialog extends JDialog {
         otpEmailField.setPreferredSize(new Dimension(300, 40));
         panel.add(otpEmailField, gbc);
 
-        // Send OTP button
+        // Send‑OTP button
         gbc.gridy = 2;
         gbc.insets = new Insets(0, 0, 20, 0);
         sendOtpButton = new JButton("Send Verification Code");
@@ -191,7 +198,7 @@ public class ForgotPasswordDialog extends JDialog {
         sendOtpButton.addActionListener(e -> sendOtp());
         panel.add(sendOtpButton, gbc);
 
-        // OTP Field (initially hidden)
+        // OTP + password fields (initially hidden)
         gbc.gridy = 3;
         otpField = new JTextField();
         otpField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Enter verification code");
@@ -200,7 +207,6 @@ public class ForgotPasswordDialog extends JDialog {
         otpField.setVisible(false);
         panel.add(otpField, gbc);
 
-        // New Password Field (initially hidden)
         gbc.gridy = 4;
         newPasswordField = new JPasswordField();
         newPasswordField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "New password");
@@ -209,7 +215,6 @@ public class ForgotPasswordDialog extends JDialog {
         newPasswordField.setVisible(false);
         panel.add(newPasswordField, gbc);
 
-        // Confirm Password Field (initially hidden)
         gbc.gridy = 5;
         confirmPasswordField = new JPasswordField();
         confirmPasswordField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Confirm new password");
@@ -218,7 +223,6 @@ public class ForgotPasswordDialog extends JDialog {
         confirmPasswordField.setVisible(false);
         panel.add(confirmPasswordField, gbc);
 
-        // Reset Button (initially hidden)
         gbc.gridy = 6;
         gbc.insets = new Insets(20, 0, 10, 0);
         resetButton = new JButton("Reset Password");
@@ -232,7 +236,7 @@ public class ForgotPasswordDialog extends JDialog {
         resetButton.setVisible(false);
         panel.add(resetButton, gbc);
 
-        // Status label
+        // Status
         gbc.gridy = 7;
         gbc.insets = new Insets(10, 0, 0, 0);
         statusLabel = new JLabel(" ");
@@ -244,28 +248,40 @@ public class ForgotPasswordDialog extends JDialog {
         return panel;
     }
 
+    // --------------------------------------------------------------------- helpers
     private void showStatus(String message, boolean isError) {
         statusLabel.setText(message);
         statusLabel.setForeground(isError ? new Color(255, 120, 120) : new Color(120, 255, 120));
     }
 
+    // ---------------------------------------------------  Step 1 : send OTP ---
     private void sendOtp() {
-        String email = otpEmailField.getText().trim();
-        String selectedRole = (String) roleComboBox.getSelectedItem();
+        final String email = otpEmailField.getText().trim();
+        final String selectedRole = (String) roleComboBox.getSelectedItem();
 
         if (email.isEmpty()) {
-            showStatus("Email cannot be empty", true);
+            showStatus("E‑mail cannot be empty", true);
             return;
         }
         if (!isValidEmail(email)) {
-            showStatus("Please enter a valid email address", true);
+            showStatus("Please enter a valid e‑mail address", true);
             return;
         }
 
-        // Simulate OTP sending with role information
-        showStatus("OTP sent to " + email + " (" + selectedRole + " account)", false);
+        // NEW  ➜  check that the e‑mail exists for the chosen role
+        if (!forgetController.handleEmailExists(selectedRole, email)) {
+            showStatus("E‑mail not found for selected role", true);
+            return;
+        }
 
-        // Show the hidden fields
+        // Generate + send OTP
+        generatedOTP = forgetController.generateOTP();
+        emailSender mail = new emailSender();
+        mail.sendEmail(email, "Here is your requested OTP", generatedOTP + " is your OTP for resetting password!");
+
+        showStatus("OTP sent to " + email + ". Please check your spam folder as well!", false);
+
+        // Reveal next‑step fields
         otpEmailField.setEnabled(false);
         sendOtpButton.setVisible(false);
         otpField.setVisible(true);
@@ -273,18 +289,17 @@ public class ForgotPasswordDialog extends JDialog {
         confirmPasswordField.setVisible(true);
         resetButton.setVisible(true);
 
-        // Focus on OTP field
         otpField.requestFocusInWindow();
-
-        // Adjust dialog size
         pack();
     }
 
+    // -------------------------------------------------  Step 2 : reset pwd ----
     private void resetPassword() {
-        String otp = otpField.getText().trim();
-        String newPass = new String(newPasswordField.getPassword());
-        String confirmPass = new String(confirmPasswordField.getPassword());
-        String selectedRole = (String) roleComboBox.getSelectedItem();
+        final String otp = otpField.getText().trim();
+        final String newPass = new String(newPasswordField.getPassword());
+        final String confirmPass = new String(confirmPasswordField.getPassword());
+        final String selectedRole = (String) roleComboBox.getSelectedItem();
+        final String email = otpEmailField.getText().trim();
 
         if (otp.isEmpty() || newPass.isEmpty() || confirmPass.isEmpty()) {
             showStatus("All fields are required", true);
@@ -294,38 +309,34 @@ public class ForgotPasswordDialog extends JDialog {
             showStatus("Passwords do not match", true);
             return;
         }
-        if (newPass.length() < 8) {
-            showStatus("Password must be at least 8 characters", true);
-            return;
-        }
 
-        // Simulate OTP verification with role information
-        if ("123456".equals(otp)) {
-            showStatus(selectedRole + " password reset successfully!", false);
+        if (generatedOTP.equals(otp)) {
+            // Call to update password in DB
+            boolean success = forgetController.handleUpdatePassword(selectedRole, email, newPass);
+            if (success) {
+                showStatus(selectedRole + " password reset successfully!", false);
 
-            // Disable all fields
-            otpField.setEnabled(false);
-            newPasswordField.setEnabled(false);
-            confirmPasswordField.setEnabled(false);
-            resetButton.setEnabled(false);
+                otpField.setEnabled(false);
+                newPasswordField.setEnabled(false);
+                confirmPasswordField.setEnabled(false);
+                resetButton.setEnabled(false);
 
-            // Close after delay
-            Timer timer = new Timer(2000, e -> {
-                dispose();
-                ((Timer) e.getSource()).stop();
-            });
-            timer.setRepeats(false);
-            timer.start();
+                new Timer(2000, e -> {
+                    dispose();
+                    ((Timer) e.getSource()).stop();
+                }) {{
+                    setRepeats(false);
+                }}.start();
+            } else {
+                showStatus("Failed to reset password. Please try again.", true);
+            }
         } else {
             showStatus("Invalid verification code", true);
         }
     }
 
     private boolean isValidEmail(String email) {
-        if (email == null || email.isEmpty()) {
-            return false;
-        }
-        Matcher matcher = EMAIL_PATTERN.matcher(email);
-        return matcher.matches();
+        Matcher m = EMAIL_PATTERN.matcher(email == null ? "" : email);
+        return m.matches();
     }
 }

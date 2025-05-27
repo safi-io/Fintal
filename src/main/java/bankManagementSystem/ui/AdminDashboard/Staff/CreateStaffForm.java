@@ -176,7 +176,7 @@ public class CreateStaffForm extends JPanel {
                 return;
             }
 
-            int branchId = Integer.parseInt(branchItem.split(" - ")[0]);
+            int branchId = Integer.parseInt(branchItem.split(" _ ")[0]);
 
             try {
                 if (staffController.handleCreateStaff(name, email, phone, cnic, dob, branchId)) {
