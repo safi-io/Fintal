@@ -14,5 +14,6 @@
     <orderEntry type="library" name="flatlaf-3.3" level="project" />
     <orderEntry type="library" name="stripe-java-29.1.0" level="project" />
     <orderEntry type="library" name="gson-2.10.1" level="project" />
+    <orderEntry type="library" name="sendgrid-java" level="project" />
   </component>
 </module>
