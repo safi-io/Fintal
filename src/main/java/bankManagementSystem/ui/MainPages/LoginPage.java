@@ -1,6 +1,5 @@
 package main.java.bankManagementSystem.ui.MainPages;
 
-import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
 import main.java.bankManagementSystem.controller.AdminDashboard.StaffController;
 import main.java.bankManagementSystem.controller.CustomerDashboard.CustomerController;
@@ -11,16 +10,25 @@ import main.java.bankManagementSystem.ui.CustomerDashboard.CustomerDashboard;
 import main.java.bankManagementSystem.ui.StaffDashboard.StaffDashboard;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.border.EmptyBorder;
 
 public class LoginPage extends JFrame {
+    // Color scheme matching CreateStaffForm
+    private static final Color BG_COLOR = new Color(250, 252, 254);
+    private static final Color CARD_BG = Color.WHITE;
+    private static final Color PRIMARY = new Color(10, 132, 255);
+    private static final Color ACCENT = new Color(48, 209, 88);
+    private static final Color TEXT_PRIMARY = new Color(33, 33, 33);
+    private static final Color TEXT_SECONDARY = new Color(120, 120, 120);
+    private static final Color ERROR_COLOR = new Color(255, 69, 58);
 
     private JTextField emailField;
     private JPasswordField passwordField;
@@ -47,8 +55,8 @@ public class LoginPage extends JFrame {
         this.customerController = new CustomerController();
 
         setTitle("Bank Management System - Login");
-        setUndecorated(true); // Remove window decorations
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // Full screen window
+        setUndecorated(true);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // --- Main Layered Pane for Background and Content ---
@@ -74,158 +82,253 @@ public class LoginPage extends JFrame {
         backgroundPanel.setBounds(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
         layeredPane.add(backgroundPanel, JLayeredPane.DEFAULT_LAYER);
 
-        // --- Content Panel (for logo, login form, and time) ---
-        JPanel contentPanel = new JPanel(new GridBagLayout());
-        contentPanel.setOpaque(false); // Make it transparent to see the background
-        contentPanel.setBorder(new EmptyBorder(50, 50, 50, 50)); // Padding
+        // Main panel with transparent background
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setOpaque(false);
+        mainPanel.setBounds(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
+        layeredPane.add(mainPanel, JLayeredPane.PALETTE_LAYER);
 
-        GridBagConstraints gbc = new GridBagConstraints();
+        // Create the main card panel with rounded corners and shadow
+        RoundedShadowPanel card = new RoundedShadowPanel(20);
+        card.setBackground(CARD_BG);
+        card.setBorder(new EmptyBorder(50, 60, 50, 60));
+        card.setLayout(new GridBagLayout());
 
-        // --- Logo/Bank Name ---
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.insets = new Insets(0, 0, 60, 0); // Increased bottom padding
-        gbc.anchor = GridBagConstraints.CENTER;
-        JLabel bankLogoLabel = new JLabel("<html><h1 style='color:#6FA3D7; font-size:48px; text-shadow: 2px 2px 4px rgba(0,0,0,0.4);'>BankXPro</h1></html>"); // Lighter blue for dark theme
-        bankLogoLabel.setFont(new Font("Segoe UI", Font.BOLD, 100)); // Larger font size
-        contentPanel.add(bankLogoLabel, gbc);
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.insets = new Insets(15, 25, 15, 25);
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.weightx = 1;
+        gc.anchor = GridBagConstraints.CENTER;
 
-        // --- Login Form Panel ---
-        JPanel loginFormPanel = new JPanel(new GridBagLayout());
-        loginFormPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 40, 50)); // Increased internal padding
-        loginFormPanel.putClientProperty(FlatClientProperties.STYLE, "arc: 30; background: rgba(255, 255, 255, 0.1); shadow-width: 12; shadow-color: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);"); // Semi-transparent, larger shadow, subtle border
+        int row = 0;
 
-        gbc.gridy = 1;
-        gbc.weightx = 0;
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.anchor = GridBagConstraints.CENTER;
-        contentPanel.add(loginFormPanel, gbc);
+        // Bank Logo/Title
+        gc.gridx = 0;
+        gc.gridy = row++;
+        gc.gridwidth = 2;
+        gc.insets = new Insets(0, 0, 40, 0);
+        JLabel bankLogoLabel = new JLabel("FINTAL");
+        bankLogoLabel.setFont(new Font("Segoe UI", Font.BOLD, 48));
+        bankLogoLabel.setForeground(PRIMARY);
+        bankLogoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        card.add(bankLogoLabel, gc);
 
-        // --- Email Field ---
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.insets = new Insets(0, 0, 25, 0); // Increased bottom padding
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Keep horizontal fill so it centers and expands if needed, but preferred size will take precedence
-        emailField = new JTextField(30); // Set preferred column width (e.g., 30 characters)
-        emailField.setPreferredSize(new Dimension(emailField.getPreferredSize().width, 60));
-        emailField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Email Address");
-        emailField.putClientProperty(FlatClientProperties.STYLE, "font: 24; padding: 15px;"); // Larger text, more internal padding
-        loginFormPanel.add(emailField, gbc);
+        // Subtitle
+        gc.gridy = row++;
+        gc.insets = new Insets(0, 0, 40, 0);
+        JLabel subtitleLabel = new JLabel("Fintal — Digitally Engineered for Finance.");
+        subtitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        subtitleLabel.setForeground(TEXT_SECONDARY);
+        subtitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        card.add(subtitleLabel, gc);
 
-        // --- Password Field ---
-        gbc.gridy = 1;
-        gbc.insets = new Insets(0, 0, 25, 0);
-        passwordField = new JPasswordField(30); // Set preferred column width (e.g., 30 characters)
-        passwordField.setPreferredSize(new Dimension(passwordField.getPreferredSize().width, 60));
-        passwordField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Password");
-        passwordField.putClientProperty(FlatClientProperties.STYLE, "font: 24; padding: 15px;"); // Larger text, more internal padding
-        loginFormPanel.add(passwordField, gbc);
+        // Reset insets for form fields
+        gc.insets = new Insets(15, 25, 15, 25);
+        gc.gridwidth = 1;
 
-        // --- Drop Down Role ---
-        gbc.gridy = 2;
-        gbc.insets = new Insets(0, 0, 40, 0); // Increased bottom padding
-        String[] roles = {"Customer", "Staff", "Admin"};
-        roleDropdown = new JComboBox<>(roles);
-        roleDropdown.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Select Role");
-        roleDropdown.putClientProperty(FlatClientProperties.STYLE, "font: 24; padding: 10px;"); // Much larger text, more internal padding
-        roleDropdown.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"); // Make it even wider
-        loginFormPanel.add(roleDropdown, gbc);
+        // Email Field
+        addLabeledField(card, gc, row++, "Email Address",
+                createEmailField(), "Enter your email address");
 
+        // Password Field
+        addLabeledField(card, gc, row++, "Password",
+                createPasswordField(), "Enter your password");
 
-        // --- Login Button ---
-        gbc.gridy = 3;
-        gbc.insets = new Insets(0, 0, 15, 0);
-        JButton loginButton = new JButton("Login");
-        loginButton.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_ROUND_RECT);
-        loginButton.setBackground(new Color(60, 141, 188)); // Still a vibrant blue
-        loginButton.setForeground(Color.WHITE);
-        loginButton.setFont(loginButton.getFont().deriveFont(Font.BOLD, 20f)); // Significantly larger
-        loginButton.setPreferredSize(new Dimension(250, 55)); // Larger button
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                attemptLogin();
-            }
-        });
-        loginFormPanel.add(loginButton, gbc);
+        // Role Selection
+        gc.gridx = 0;
+        gc.gridy = row;
+        JLabel roleLabel = new JLabel("Role");
+        roleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        roleLabel.setForeground(Color.BLACK);
+        card.add(roleLabel, gc);
 
-        // --- Forgot Password Button ---
-        gbc.gridy = 4;
-        gbc.insets = new Insets(10, 0, 10, 0);
-        JButton forgotPasswordButton = new JButton("Forgot Password?");
-        forgotPasswordButton.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_BORDERLESS);
-        forgotPasswordButton.setForeground(Color.BLACK); // Lighter blue for dark theme
-        forgotPasswordButton.setFont(forgotPasswordButton.getFont().deriveFont(Font.PLAIN, 15f)); // Larger text
-        loginFormPanel.add(forgotPasswordButton, gbc);
+        gc.gridx = 1;
+        roleDropdown = createRoleDropdown();
+        card.add(roleDropdown, gc);
+        row++;
 
-        // Inside LoginPage's constructor, where forgotPasswordButton is set up:
-        forgotPasswordButton.addActionListener(e -> {
-            ForgotPasswordDialog dialog = new ForgotPasswordDialog(this); // 'this' refers to the LoginPage JFrame
-            dialog.setVisible(true);
-        });
-
-        // --- Sign Up Button ---
-        gbc.gridy = 5;
-        gbc.insets = new Insets(10, 0, 0, 0);
-        JButton signUpButton = new JButton("Don't have an account? Sign Up");
-        signUpButton.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_BORDERLESS);
-        signUpButton.setForeground(Color.BLACK); // Lighter blue for dark theme
-        signUpButton.setFont(signUpButton.getFont().deriveFont(Font.PLAIN, 15f)); // Larger text
-        signUpButton.addActionListener(e -> {
-            new SignUpPage();
-            dispose();
-        });
-        loginFormPanel.add(signUpButton, gbc);
-
-
-        // --- Status Label (for errors/messages) ---
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        gbc.gridwidth = 2;
-        gbc.insets = new Insets(30, 0, 0, 0); // More top padding
-        statusLabel = new JLabel("");
-        statusLabel.setForeground(new Color(255, 100, 100)); // Brighter red for dark theme
-        statusLabel.setFont(statusLabel.getFont().deriveFont(Font.BOLD, 16f)); // Larger and bold
+        // Status Label
+        gc.gridx = 0;
+        gc.gridy = row++;
+        gc.gridwidth = 2;
+        gc.insets = new Insets(20, 25, 10, 25);
+        statusLabel = new JLabel(" ");
+        statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        loginFormPanel.add(statusLabel, gbc);
+        card.add(statusLabel, gc);
 
-        // --- System Time Label ---
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 2; // Below the login form panel
-        gbc.gridwidth = 2;
-        gbc.insets = new Insets(60, 0, 0, 0); // More top padding
-        gbc.anchor = GridBagConstraints.CENTER;
+        // Button Panel
+        gc.gridy = row++;
+        gc.insets = new Insets(10, 25, 15, 25);
+        JPanel buttonPanel = createButtonPanel();
+        card.add(buttonPanel, gc);
+
+        // Time Label
+        gc.gridy = row++;
+        gc.insets = new Insets(30, 25, 0, 25);
         timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18)); // Larger font
-        timeLabel.setForeground(new Color(180, 180, 180)); // Lighter grey for dark theme
-        contentPanel.add(timeLabel, gbc);
+        timeLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        timeLabel.setForeground(Color.BLACK);
+        timeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        card.add(timeLabel, gc);
 
-        // Center the content panel on the layered pane
-        contentPanel.setBounds(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
-        layeredPane.add(contentPanel, JLayeredPane.PALETTE_LAYER);
+        // Add card to main panel
+        GridBagConstraints mainGbc = new GridBagConstraints();
+        mainGbc.gridx = 0;
+        mainGbc.gridy = 0;
+        mainGbc.anchor = GridBagConstraints.CENTER;
+        mainPanel.add(card, mainGbc);
 
-        // Update time every second
-        Timer timer = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateTime();
-            }
-        });
-        timer.start();
-
-        updateTime(); // Initial time update
+        // Setup time updates
+        setupTimeUpdates();
 
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
+    private JTextField createEmailField() {
+        emailField = new JTextField(25);
+        styleTextField(emailField);
+        emailField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        return emailField;
+    }
+
+    private JPasswordField createPasswordField() {
+        passwordField = new JPasswordField(25);
+        styleTextField(passwordField);
+        passwordField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        return passwordField;
+    }
+
+    private JComboBox<String> createRoleDropdown() {
+        String[] roles = {"Customer", "Staff", "Admin"};
+        JComboBox<String> dropdown = new JComboBox<>(roles);
+        styleComboBox(dropdown);
+        return dropdown;
+    }
+
+    private JPanel createButtonPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        panel.setOpaque(false);
+
+        // Login Button
+        JButton loginButton = new JButton("Login");
+        stylePrimaryButton(loginButton);
+        loginButton.addActionListener(e -> attemptLogin());
+        panel.add(loginButton);
+
+        // Secondary buttons panel
+        JPanel secondaryPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        secondaryPanel.setOpaque(false);
+
+        JButton forgotPasswordButton = new JButton("Forgot Password?");
+        styleSecondaryButton(forgotPasswordButton);
+        forgotPasswordButton.addActionListener(e -> {
+            ForgotPasswordDialog dialog = new ForgotPasswordDialog(this);
+            dialog.setVisible(true);
+        });
+
+        JButton signUpButton = new JButton("Sign Up");
+        styleSecondaryButton(signUpButton);
+        signUpButton.addActionListener(e -> {
+            new SignUpPage();
+            dispose();
+        });
+
+        secondaryPanel.add(forgotPasswordButton);
+        secondaryPanel.add(signUpButton);
+
+        JPanel combinedPanel = new JPanel(new BorderLayout());
+        combinedPanel.setOpaque(false);
+        combinedPanel.add(panel, BorderLayout.NORTH);
+        combinedPanel.add(secondaryPanel, BorderLayout.SOUTH);
+
+        return combinedPanel;
+    }
+
+    private void addLabeledField(JPanel parent, GridBagConstraints gc, int row,
+                                 String label, JComponent field, String tooltip) {
+        gc.gridx = 0;
+        gc.gridy = row;
+        gc.gridwidth = 1;
+
+        JLabel jLabel = new JLabel(label);
+        jLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        jLabel.setForeground(Color.BLACK);
+        parent.add(jLabel, gc);
+
+        gc.gridx = 1;
+        field.setToolTipText(tooltip);
+        parent.add(field, gc);
+    }
+
+    private void styleTextField(JTextField field) {
+        field.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 2, 0, TEXT_SECONDARY),
+                BorderFactory.createEmptyBorder(8, 5, 8, 5)
+        ));
+        field.setPreferredSize(new Dimension(300, 35));
+        field.setBackground(CARD_BG);
+    }
+
+    private void styleComboBox(JComboBox<?> comboBox) {
+        comboBox.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        comboBox.setBackground(CARD_BG);
+        comboBox.setForeground(TEXT_PRIMARY);
+        comboBox.setPreferredSize(new Dimension(300, 35));
+        ((JComponent) comboBox.getRenderer()).setBorder(new EmptyBorder(5, 8, 5, 8));
+    }
+
+    private void stylePrimaryButton(JButton btn) {
+        btn.setBackground(PRIMARY);
+        btn.setForeground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setBorder(BorderFactory.createEmptyBorder(12, 25, 12, 25));
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setContentAreaFilled(true);
+        btn.setOpaque(true);
+
+        btn.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                btn.setBackground(PRIMARY.darker());
+            }
+            public void mouseExited(MouseEvent e) {
+                btn.setBackground(PRIMARY);
+            }
+        });
+    }
+
+    private void styleSecondaryButton(JButton btn) {
+        btn.setBackground(CARD_BG);
+        btn.setForeground(PRIMARY);
+        btn.setFocusPainted(false);
+        btn.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+        btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setContentAreaFilled(false);
+        btn.setOpaque(false);
+
+        btn.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                btn.setForeground(PRIMARY.darker());
+            }
+            public void mouseExited(MouseEvent e) {
+                btn.setForeground(PRIMARY);
+            }
+        });
+    }
+
+    private void setupTimeUpdates() {
+        Timer timer = new Timer(1000, e -> updateTime());
+        timer.start();
+        updateTime();
+    }
+
     private void updateTime() {
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm:ss a | EEEE, MMMM dd,yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm:ss a | EEEE, MMMM dd, yyyy");
         timeLabel.setText(now.format(formatter));
     }
 
@@ -235,7 +338,7 @@ public class LoginPage extends JFrame {
         String password = new String(passwordField.getPassword());
         String role = (String) roleDropdown.getSelectedItem();
 
-        // --- Input Validation ---
+        // Input Validation
         if (email.isEmpty() || password.isEmpty()) {
             showStatus("Email and Password cannot be empty.", true);
             return;
@@ -270,27 +373,24 @@ public class LoginPage extends JFrame {
             } else {
                 // Fetch Account Number
                 String accountNumber = customerController.handlegetAccountNumberByMail(email);
-
-                // Fetch Type
                 String type = customerController.handlegetAccountTypeByAccountNumber(accountNumber);
-
-                // Is Account Opened
                 boolean isAccountOpened = customerController.handleGetIsAccountOpened(accountNumber);
 
                 if (!isAccountOpened) {
-                    JOptionPane.showMessageDialog(null, "Account is not opened yet, you will be informed by mail...", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null,
+                            "Account is not opened yet, you will be informed by mail...",
+                            "Info", JOptionPane.INFORMATION_MESSAGE);
                     emailField.setText("");
                     passwordField.setText("");
                     return;
                 }
 
-
-                // Is Account Deleted
                 boolean isAccountDeleted = customerController.handleGetIsAccountDeleted(accountNumber);
 
-
                 if (isAccountDeleted) {
-                    JOptionPane.showMessageDialog(null, "Account is deleted!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null,
+                            "Account is deleted!",
+                            "Info", JOptionPane.INFORMATION_MESSAGE);
                     emailField.setText("");
                     passwordField.setText("");
                     return;
@@ -301,26 +401,21 @@ public class LoginPage extends JFrame {
                         BeneficiaryDashboard dashboard = new BeneficiaryDashboard(accountNumber);
                         dashboard.setVisible(true);
                     });
-                    dispose(); // Close the current window
+                    dispose();
                 } else {
                     SwingUtilities.invokeLater(() -> {
                         CustomerDashboard dashboard = new CustomerDashboard(accountNumber);
                         dashboard.setVisible(true);
                     });
-                    dispose(); // Close the current window
+                    dispose();
                 }
-
-
             }
 
             showStatus("Logged In!", false);
 
         } catch (Exception ex) {
-            // Catch exceptions thrown by your backend (e.g., from DAO/Controller)
             showStatus("An error occurred: " + ex.getMessage(), true);
         }
-
-
     }
 
     private boolean isValidEmail(String email) {
@@ -329,19 +424,51 @@ public class LoginPage extends JFrame {
     }
 
     public void showStatus(String message, boolean isError) {
-        // Wrap the message in HTML with max width constraint
-        String htmlMessage = "<html><div style='width: 230px; text-align: center;'>" + message.replace("\n", "<br>") + "</div></html>";
-
-        statusLabel.setText(htmlMessage);
+        statusLabel.setText(message);
         if (isError) {
-            statusLabel.setForeground(new Color(255, 100, 100)); // Brighter red for dark theme
+            statusLabel.setForeground(ERROR_COLOR);
         } else {
-            statusLabel.setForeground(new Color(100, 255, 100)); // Brighter green for dark theme
+            statusLabel.setForeground(ACCENT.darker());
         }
-
-        // Force the layout to update
         statusLabel.revalidate();
         statusLabel.repaint();
+    }
+
+    // RoundedShadowPanel class (same as CreateStaffForm)
+    private static class RoundedShadowPanel extends JPanel {
+        private final int cornerRadius;
+
+        RoundedShadowPanel(int radius) {
+            super();
+            this.cornerRadius = radius;
+            setOpaque(false);
+            setLayout(new GridBagLayout());
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            int shadowGap = 6;
+            int shadowOffset = 4;
+
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            // Draw shadow
+            g2.setColor(new Color(0, 0, 0, 30));
+            g2.fillRoundRect(shadowOffset, shadowOffset,
+                    getWidth() - shadowGap, getHeight() - shadowGap,
+                    cornerRadius, cornerRadius);
+
+            // Draw main panel
+            g2.setColor(getBackground());
+            g2.fillRoundRect(0, 0,
+                    getWidth() - shadowGap - shadowOffset,
+                    getHeight() - shadowGap - shadowOffset,
+                    cornerRadius, cornerRadius);
+
+            g2.dispose();
+            super.paintComponent(g);
+        }
     }
 
     public static void main(String[] args) {

@@ -89,7 +89,7 @@ public class SignUpPage extends JFrame {
         titleGc.insets = new Insets(0, 0, 10, 0); // Increased bottom padding
         titleGc.anchor = GridBagConstraints.CENTER;
 
-        JLabel bankLogoLabel = new JLabel("<html><h1 style='color:#6FA3D7; font-size:48px; text-shadow: 2px 2px 4px rgba(0,0,0,0.4);'>BankXPro</h1></html>");
+        JLabel bankLogoLabel = new JLabel("<html><h1 style='color:#6FA3D7; font-size:48px; text-shadow: 2px 2px 4px rgba(0,0,0,0.4);'>FINTAL</h1></html>");
         bankLogoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         bg.add(bankLogoLabel, titleGc);
 
