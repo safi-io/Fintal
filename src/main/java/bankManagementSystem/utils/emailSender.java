@@ -10,8 +10,8 @@ import java.util.Properties;
 public class emailSender {
     private final String apiKey;
 
-    public emailSender(String apiKey) {
-        this.apiKey = loadStripeSendGridKey();
+    public emailSender() {
+        this.apiKey = loadSendGridApiKey();
     }
 
     public void emailConfigurations(String toEmail, String subject, String content) {
@@ -43,7 +43,7 @@ public class emailSender {
         }
     }
 
-    private String loadStripeSendGridKey() {
+    private String loadSendGridApiKey() {
         try {
             Properties props = new Properties();
             FileInputStream fis = new FileInputStream("src/main/resources/config.properties");
@@ -56,16 +56,9 @@ public class emailSender {
         }
     }
 
-
-    public static void sendEmail(String toEmail, String subject, String content) {
-        String apiKey = System.getenv("SENDER_GRID_API_KEY");
-        emailSender emailService = new emailSender(apiKey);
+    public void sendEmail(String toEmail, String subject, String content) {
+        emailSender emailService = new emailSender();
         emailService.emailConfigurations(toEmail, subject, content);
     }
-
-    public static void main(String[] args) {
-        sendEmail("chmuzammal115@gmail.com", "Tere Munh mein Chocolate", "Safi ki");
-    }
-
 
 }

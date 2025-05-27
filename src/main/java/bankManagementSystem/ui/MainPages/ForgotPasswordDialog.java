@@ -294,12 +294,7 @@ public class ForgotPasswordDialog extends JDialog {
             showStatus("Passwords do not match", true);
             return;
         }
-        if (newPass.length() < 8) {
-            showStatus("Password must be at least 8 characters", true);
-            return;
-        }
 
-        // Simulate OTP verification with role information
         if ("123456".equals(otp)) {
             showStatus(selectedRole + " password reset successfully!", false);
 
@@ -328,4 +323,5 @@ public class ForgotPasswordDialog extends JDialog {
         Matcher matcher = EMAIL_PATTERN.matcher(email);
         return matcher.matches();
     }
+
 }
