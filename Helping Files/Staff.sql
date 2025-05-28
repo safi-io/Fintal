@@ -14,11 +14,3 @@ CREATE TABLE STAFF (
 		REFERENCES BRANCH(BRANCH_ID)
         ON DELETE SET NULL
 );
-
-SELECT staff_password AS passwordColumn FROM staff WHERE staff_mail = 'safi@mail.com';
-
-SELECT * FROM STAFF WHERE staff_id <> 6;
-
-SELECT * FROM STAFF;
-TRUNCATE TABLE STAFF;
-DROP TABLE STAFF;
