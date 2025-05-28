@@ -82,7 +82,7 @@ public class DeleteStaffForm extends JPanel {
         String item = (String) staffCombo.getSelectedItem();
         if (item == null) { setStatus("No staff to delete.", true); return; }
 
-        String idStr   = item.split(" - ")[0];
+        String idStr   = item.split(" _ ")[0];
         int confirm = JOptionPane.showConfirmDialog(
                 this, "Are you sure you want to delete staff ID " + idStr + "?",
                 "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);

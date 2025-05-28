@@ -79,7 +79,7 @@ public class DeleteBranchForm extends JPanel {
                 return;
             }
 
-            String selectedId = selected.split(" - ")[0];
+            String selectedId = selected.split(" _ ")[0];
 
             int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this branch?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {

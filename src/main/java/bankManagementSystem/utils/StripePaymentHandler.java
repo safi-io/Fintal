@@ -30,18 +30,21 @@ public class StripePaymentHandler {
     }
 
     private String loadStripeSecretKey() {
-
         Properties props = new Properties();
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
             if (input == null) {
                 System.err.println("Unable to find config.properties");
+                return null;
             }
+            props.load(input);
         } catch (IOException e) {
             System.err.println("Error loading config.properties: " + e.getMessage());
+            return null;
         }
 
         return props.getProperty("stripe.secret.key");
     }
+
 
     public void initiatePayment() {
         try {

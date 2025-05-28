@@ -93,7 +93,7 @@ public class UpdateBranchForm extends JPanel {
         if (selected == null || selected.isEmpty()) return;
 
         try {
-            int id = Integer.parseInt(selected.split(" - ")[0]);
+            int id = Integer.parseInt(selected.split(" _ ")[0]);
             BranchModel branch = controller.handleGetBranchById(id);
             if (branch != null) {
                 nameField.setText(branch.getBranchName());
@@ -113,7 +113,7 @@ public class UpdateBranchForm extends JPanel {
             return;
         }
 
-        int id = Integer.parseInt(selected.split(" - ")[0]);
+        int id = Integer.parseInt(selected.split(" _ ")[0]);
         String name = nameField.getText().trim();
         String address = addressField.getText().trim();
         String phone = phoneField.getText().trim();
