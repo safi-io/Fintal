@@ -212,7 +212,7 @@ This project is intended solely for **educational purposes** and is not licensed
 For any queries, issues, or feedback regarding Fintal, please feel free to reach out:
 
 * **GitHub Issues:** [https://github.com/safi-io/fintal/issues](https://github.com/safi-io/fintal/issues)
-* **Email:** [m.safi.ullah@example.com](mailto:m.safi.ullah@outlook.com)
+* **Email:** [m.safi.ullah@outlook.com](mailto:m.safi.ullah@outlook.com)
 
 ---
 
