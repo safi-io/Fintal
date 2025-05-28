@@ -1,4 +1,4 @@
-USE bankManagementSystem;
+USE fintal;
 
 -- TRIGGERS FOR BANK MANAGEMENT SYSTEM
 

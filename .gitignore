@@ -5,6 +5,8 @@ out/
 src/resources/config.properties
 *.jar
 
+/config.properties
+src/main/resources/config.properties
 /lib/
 
 ### Eclipse ###
