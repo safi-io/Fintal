@@ -1,7 +1,6 @@
 package main.java.bankManagementSystem.ui.CustomerDashboard;
 
 import main.java.bankManagementSystem.controller.CustomerDashboard.CustomerController;
-import main.java.bankManagementSystem.utils.StripePaymentHandler;
 import main.java.bankManagementSystem.ui.CustomerDashboard.Bills.PayBills;
 import main.java.bankManagementSystem.ui.CustomerDashboard.BuildDashboard.MainDashboard;
 import main.java.bankManagementSystem.ui.CustomerDashboard.Loan.LoanDashboard;
@@ -9,6 +8,7 @@ import main.java.bankManagementSystem.ui.CustomerDashboard.Profile.ProfileSettin
 import main.java.bankManagementSystem.ui.CustomerDashboard.Transactions.SendMoney;
 import main.java.bankManagementSystem.ui.CustomerDashboard.Transactions.TransactionData;
 import main.java.bankManagementSystem.ui.MainPages.LoginPage;
+import main.java.bankManagementSystem.utils.StripePaymentHandler;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -20,18 +20,16 @@ import java.time.format.DateTimeFormatter;
 
 public class CustomerDashboard extends JFrame {
 
-    private final JPanel mainContentPanel;
-    private JButton currentlySelectedButton;
-    private JPanel nav;
-
     public static final Color SIDEBAR_BG = new Color(25, 55, 77);
     public static final Color BUTTON_BG = new Color(45, 85, 115);
     public static final Color BUTTON_HIGHLIGHT = new Color(0, 160, 150);
     public static final Color HEADING_BG = new Color(0, 110, 160);
     public static final Color CARD_BG = new Color(245, 250, 250);
-
+    private final JPanel mainContentPanel;
     private final CustomerController customerController;
     private final String loggedInAcc;
+    private JButton currentlySelectedButton;
+    private JPanel nav;
 
     public CustomerDashboard(String loggedInAcc) {
         setTitle("Customer Dashboard");

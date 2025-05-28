@@ -5,6 +5,8 @@ out/
 src/resources/config.properties
 *.jar
 
+/lib/
+
 ### Eclipse ###
 .apt_generated
 .classpath

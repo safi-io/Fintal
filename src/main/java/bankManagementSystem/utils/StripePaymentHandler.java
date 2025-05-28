@@ -7,7 +7,6 @@ import main.java.bankManagementSystem.controller.CustomerDashboard.AccountContro
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;

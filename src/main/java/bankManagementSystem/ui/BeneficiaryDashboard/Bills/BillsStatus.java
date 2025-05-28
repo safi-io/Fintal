@@ -4,7 +4,10 @@ import main.java.bankManagementSystem.controller.BeneficiaryDashboard.BillContro
 import main.java.bankManagementSystem.model.BillModel;
 
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;

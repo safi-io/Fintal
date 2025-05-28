@@ -2,8 +2,6 @@ package main.java.bankManagementSystem.utils;
 
 import com.sendgrid.*;
 
-import javax.swing.*;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;

@@ -9,7 +9,6 @@ import main.java.bankManagementSystem.ui.AdminDashboard.Staff.UpdateStaffForm;
 import main.java.bankManagementSystem.ui.AdminDashboard.Transactions.ViewTransactionsPanel;
 import main.java.bankManagementSystem.ui.MainPages.LoginPage;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

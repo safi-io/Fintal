@@ -1,7 +1,6 @@
 package main.java.bankManagementSystem.controller.CustomerDashboard;
 
 import main.java.bankManagementSystem.dao.CustomerDashborad.TransactionsDAO;
-import main.java.bankManagementSystem.model.CustomerAccountBranchModel;
 import main.java.bankManagementSystem.ui.CustomerDashboard.Transactions.SendMoney;
 
 import javax.swing.*;
