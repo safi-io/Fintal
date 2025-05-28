@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /*
-TODO:   FORGOT PASSWORD, MAIL NOTIFICATIONS
+TODO:   FIELD ISSUE, STRIPE API, SEND GRID API
  */
 
 public class CustomerDashboard extends JFrame {

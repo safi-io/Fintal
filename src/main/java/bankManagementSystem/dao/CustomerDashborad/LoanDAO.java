@@ -4,6 +4,7 @@ import main.java.bankManagementSystem.model.LoanApplicationModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,17 +20,16 @@ public class LoanDAO {
     private String PASSWORD;
 
     public LoanDAO() {
-        try {
-            Path path = Paths.get("src/main/resources/config.properties");
-            Properties props;
-            try (BufferedReader reader = Files.newBufferedReader(path)) {
-                props = new Properties();
-                props.load(reader);
+        Properties props = new Properties();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+            if (input == null) {
+                System.err.println("Unable to find config.properties");
+            } else {
+                props.load(input);
+                URL = props.getProperty("db.url");
+                USER = props.getProperty("db.username");
+                PASSWORD = props.getProperty("db.password");
             }
-            URL = props.getProperty("db.url");
-            USER = props.getProperty("db.username");
-            PASSWORD = props.getProperty("db.password");
-
         } catch (IOException e) {
             System.err.println("Error loading config.properties: " + e.getMessage());
         }
