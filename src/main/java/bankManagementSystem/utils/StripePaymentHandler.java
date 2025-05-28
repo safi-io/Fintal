@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.Properties;
 
@@ -29,16 +30,17 @@ public class StripePaymentHandler {
     }
 
     private String loadStripeSecretKey() {
-        try {
-            Properties props = new Properties();
-            FileInputStream fis = new FileInputStream("src/main/resources/config.properties");
-            props.load(fis);
-            return props.getProperty("stripe.secret.key");
+
+        Properties props = new Properties();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+            if (input == null) {
+                System.err.println("Unable to find config.properties");
+            }
         } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Failed to load Stripe API key.");
-            return null;
+            System.err.println("Error loading config.properties: " + e.getMessage());
         }
+
+        return props.getProperty("stripe.secret.key");
     }
 
     public void initiatePayment() {
@@ -50,19 +52,7 @@ public class StripePaymentHandler {
 
             Stripe.apiKey = stripeApiKey;
 
-            SessionCreateParams params = SessionCreateParams.builder()
-                    .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
-                    .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl("https://example.com/success?session_id={CHECKOUT_SESSION_ID}")
-                    .setCancelUrl("https://example.com/cancel")
-                    .putMetadata("user_id", accountNumber)
-                    .addLineItem(
-                            SessionCreateParams.LineItem.builder()
-                                    .setPrice(priceId)
-                                    .setQuantity(1L)
-                                    .build()
-                    )
-                    .build();
+            SessionCreateParams params = SessionCreateParams.builder().addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD).setMode(SessionCreateParams.Mode.PAYMENT).setSuccessUrl("https://example.com/success?session_id={CHECKOUT_SESSION_ID}").setCancelUrl("https://example.com/cancel").putMetadata("user_id", accountNumber).addLineItem(SessionCreateParams.LineItem.builder().setPrice(priceId).setQuantity(1L).build()).build();
 
             Session session = Session.create(params);
             String sessionId = session.getId();

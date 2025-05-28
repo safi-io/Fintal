@@ -5,6 +5,7 @@ import com.sendgrid.*;
 import javax.swing.*;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class emailSender {
@@ -44,16 +45,16 @@ public class emailSender {
     }
 
     private String loadSendGridApiKey() {
-        try {
-            Properties props = new Properties();
-            FileInputStream fis = new FileInputStream("src/main/resources/config.properties");
-            props.load(fis);
-            return props.getProperty("sendgrid.secret.key");
+        Properties props = new Properties();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+            if (input == null) {
+                System.err.println("Unable to find config.properties");
+            }
         } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Failed to load Send Grid API key.");
-            return null;
+            System.err.println("Error loading config.properties: " + e.getMessage());
         }
+
+        return props.getProperty("sendgrid.secret.key");
     }
 
     public void sendEmail(String toEmail, String subject, String content) {
