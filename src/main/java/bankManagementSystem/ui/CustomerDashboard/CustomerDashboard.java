@@ -17,9 +17,6 @@ import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/*
-TODO:   FIELD ISSUE, STRIPE API, SEND GRID API
- */
 
 public class CustomerDashboard extends JFrame {
 

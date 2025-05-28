@@ -266,7 +266,7 @@ public class LoginPage extends JFrame {
         field.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         field.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 2, 0, TEXT_SECONDARY),
-                BorderFactory.createEmptyBorder(8, 5, 8, 5)
+                BorderFactory.createEmptyBorder(8, 5, 3, 5)
         ));
         field.setPreferredSize(new Dimension(300, 35));
         field.setBackground(CARD_BG);
