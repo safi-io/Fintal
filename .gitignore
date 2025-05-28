@@ -9,6 +9,14 @@ src/resources/config.properties
 src/main/resources/config.properties
 /lib/
 
+/resources/config.properties
+/resources/*.properties
+
+# Ignore config.properties anywhere
+config.properties
+
+# Or more specifically inside resources folder
+
 ### Eclipse ###
 .apt_generated
 .classpath
