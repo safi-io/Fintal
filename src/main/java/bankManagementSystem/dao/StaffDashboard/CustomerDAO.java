@@ -197,7 +197,6 @@ public class CustomerDAO {
     }
 
     public boolean getIsAccountOpened(String accountNumber) {
-        System.out.println(accountNumber);
         String query = "SELECT ACCOUNT_IS_OPENED FROM ACCOUNT WHERE ACCOUNT_NUMBER = ?;";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);

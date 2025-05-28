@@ -30,7 +30,6 @@ public class emailSender {
             request.setBody(mail.build());
 
             Response response = sg.api(request);
-            System.out.println("Status Code: " + response.getStatusCode());
 
             if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
                 System.out.println("Email sent successfully!");
