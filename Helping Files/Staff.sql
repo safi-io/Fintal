@@ -1,4 +1,4 @@
-USE bankManagementSystem;
+USE fintal;
 
 CREATE TABLE STAFF (
 	STAFF_ID INT PRIMARY KEY AUTO_INCREMENT,
