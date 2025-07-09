@@ -116,6 +116,7 @@ To get Fintal up and running on your local machine, follow these steps:
 2.  **Configure Database:**
     * Create a MySQL database named `fintal`.
     * Execute any provided SQL scripts to set up tables and triggers. For instance:
+    * SQL Scripts are povided in Helping Files for each table.
         ```sql
         CREATE DATABASE fintal;
         USE fintal;
@@ -143,6 +144,23 @@ To get Fintal up and running on your local machine, follow these steps:
     * Execute the main application class from your IDE. The backend server will start, following the MVC architecture, and will serve the dashboards and APIs accordingly.
 
 ---
+
+# Required JAR Libraries
+
+The following external JAR libraries are used in this project:
+
+| Library Name             | Version     | Purpose                                                                 |
+|--------------------------|-------------|-------------------------------------------------------------------------|
+| FlatLaf                  | 3.3         | Provides a modern, flat look-and-feel for Swing-based UIs              |
+| JBCrypt                  | 0.4         | Implements BCrypt hashing for secure password storage                  |
+| Apache Commons Lang3     | 3.12.0      | Provides utility classes for core Java classes (String, Number, etc.)  |
+| Gson                     | 2.10.1      | Converts Java objects to JSON and vice versa                           |
+| MySQL Connector/J        | 9.3.0       | JDBC driver for connecting Java applications to MySQL databases        |
+| OpenCSV                  | 5.11        | Simplifies reading and writing of CSV files                            |
+| SendGrid Java            | latest      | Sends transactional and marketing emails via the SendGrid API          |
+| Stripe Java              | 29.1.0      | Integrates Stripe payment processing in Java applications              |
+
+> ⚠️ Ensure all JAR files are added to your classpath or build tool (Directly in your IDE).
 
 ## Usage
 
