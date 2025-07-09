@@ -16,6 +16,9 @@
 
 Built as a **Java Core backend project**, Fintal serves as both an **academic 4th-semester database project** and an **industry-grade banking solution** with professional-level functionality.
 
+### 🚀 Hashnode Article  
+[Developing Fintech Apps using Core Java, Stripe API, and MySQL](https://safi-io.hashnode.dev/developing-fintech-apps-using-core-java-stripe-api-and-mysql)  
+
 ### 🚀 Main Features
 
 - **💳 Real Money Transactions** - Stripe integration for actual payment processing
